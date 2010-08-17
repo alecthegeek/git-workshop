@@ -9,7 +9,7 @@ Password:
     <PLACEHOLDER>
 
 Instructions downloadable at GitHub:
-[http://gist.github.com/440825](http://gist.github.com/440825)
+[http://github.com/matthewmccullough/git-workshop](http://github.com/matthewmccullough/git-workshop)
 
 Matthew's notebook IP address:
     10.0.1.2
