@@ -398,13 +398,17 @@ Compact old loose commits into pack files and prune orphans
 
 
 # TODO:
-Apply patch
-Create patch
+git apply <patchfile>
+git email-patch
+
 Merge conflict
 Merge with rebase
+git add --continue
+
 Merge without commit
 Reset soft and hard
-Clean -f and -D
+git clean -f -d
+
 SSH setup, keygen, save to GitHub
-Git serve
+git serve .
 git instaweb
