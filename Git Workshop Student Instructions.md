@@ -38,18 +38,18 @@ Some firms think SVN is the thing to move to. But would you use a Palm Pilot tod
 We also need to be conservative in our choice of tools. We don't want to use something that is going to fade away next year. But Git isn't new by technology by any stretch. It is over 5 years old now.
 
 
-# Initial Git Setup
+# SSH Setup
 
 ## Setting up an SSH Key
 This next step works with msysGit (Git for Windows) or on any *NIX system.
 
-  ssh-keygen -t rsa -C "yourname@yourcompany.com"
+    ssh-keygen -t rsa -C "yourname@yourcompany.com"
   
 The `-t` flag is the algorithms used to create the key. The `-C` flag is the comment attached to the key. The comment can serve as a reminder of which system you use this with if you are going to generate more than one key pair to partition your Git SSH key from other SSH-authenticated systems and servers.
   
 Other algorithms, like DSA, can also be used for SSH authentication and are compatible with Git, since Git is merely using the operating system's underlying SSH capabilities.
 
-  ssh-keygen -t dsa -C "yourname@yourcompany.com"
+    ssh-keygen -t dsa -C "yourname@yourcompany.com"
 
 Lengthier instructions for SSH key generation can be found at the [excellent GitHub page](http://help.github.com/msysgit-key-setup/).
 
@@ -60,13 +60,63 @@ Most Git services use half of the key we just generated for authenticating inste
 
 Keep the private half of the key (`id_rsa`) protected. Give away the public half (`id_rsa.pub`) liberally. You could even store it in a directory service if desired.
 
-## Setting up Git
-Establish the one-time parameters stored in your home directory
+## Authorizing the key on another server
+If you are in control of a server on which you'll be storing Git repos, you can authorize your account to automatically sign in. While logged in to the remote server, put the contents of a user's `id_rsa.pub` file on a single line (*absolutely no linebreaks!*) on a file named `~/.ssh/authorized_keys`.
+
+Similarly, key strings are copied-and-pasted to web based repositories like GitHub via the user interface. Copy the contents of `id_rsa.pub` to the clipboard and paste it into the appropriate textbox in the web UI of GitHub.
+
+## Testing SSH
+If you wish to test if you have passwordless (key authentication) working correctly, just SSH to the server. It will use your `id_rsa` and `id_rsa.pub` files automatically if they live in `~/.ssh/`. You should not see any prompt for a password.
+
+    ssh SERVERNAME
+
+In the case of a gitolite server, it will report your repository permissions before terminating.
+
+    hello mccm06, the gitolite version here is v1.5.5-68-g3cf2970
+    the gitolite config gives you the following access:
+         R   W 	gitolite-admin
+        @R  @W 	testing
+        @R   W 	testinglessaccess
+    Connection to mybigserver closed.
+
+
+# Setting up Git
+
+## Get binaries
+On UNIX:
+
+  * From source
+    * [Web UI to browse source](http://git.kernel.org/?p=git/git.git;a=summary)
+    * Git repo for source: `git://git.kernel.org/pub/scm/git/git.git`
+  * Package manager
+    * `apt-get git-core`
+    * `apt-get git-gui`
+    * `apt-get git-doc`
+    * `apt-get git-svn`
+
+On Mac:
+
+  * [MacPorts](http://www.macports.org/) (user-compiled)
+  * [HomeBrew](http://github.com/mxcl/homebrew) (user-compiled)
+  * [git-osx-installer](http://code.google.com/p/git-osx-installer/) (precompiled)
+
+On Windows:
+
+  * Two [msysGit](http://code.google.com/p/msysgit/) choices: a full toolkit, or just a precompiled distribution.
+  * [Precompiled](http://msysgit.googlecode.com/files/Git-1.7.3.1-preview20101002.exe) is named "Git-XXXexe"
+  * [Full toolkit](http://msysgit.googlecode.com/files/msysGit-fullinstall-1.7.3.1-preview20101002.exe) with gcc compiler is named "msysGit-fullinstall-XXX.exe"
+  
+If you get stuck, a series of [help pages at GitHub](http://help.github.com/) are almost certain to assist.
+
+## Configuring your Git username and email address
+Establish the one-time parameters stored in your home directory:
+
     git config --global user.name "Your Name"
     git config --global user.email "you@example.com"
     git config --global color.ui "auto"
 
 View our handiwork
+
     echo ~/.gitconfig
 
 
@@ -78,18 +128,25 @@ View our handiwork
     git init
 
 or Naked, no local files, and with group UNIX permissions for headless use
+
     git --bare init --shared
 
 ## Cloning someone else's Git protocol-hosted repo
 List of Git-hosted projects
+
     http://git.apache.org
+    
 Get a full copy of a Git project
+
     git clone git://git.apache.org/commons-logging.git
 
 ## Cloning a HTTP repo
 Apache also is pushing nightly syncs to GitHub
+
     http://github.com/apache/commons-logging
+    
 Clone from GitHub (can be forked)
+
     git clone http://github.com/apache/commons-logging.git
 
 ## Creating a free hosted repo
@@ -108,61 +165,104 @@ I've already set up a repository for us to try:
 
 ## Looking around the .git folder
 The .git folder is the "magic" directory
+
     cd .git
     ls -al
     tree
 
 There is only one .git folder at the top of the tree.
 
-
 ## Showing current Status
 Status of a repo while sitting anywhere in that repo's directory tree)
+
     git status
 
+Everything unstaged diffed to the last commit
+
     git diff
-everything unstaged diffed to the last commit
+    
+Everything staged diffed to the last commit
 
     git diff --cached
-everything staged diffed to the last commit
+    
+Everything unstaged and staged diffed to the last commit
 
     git diff HEAD
-everything unstaged and staged diffed to the last commit
-
 
 ## Adding, removing, renaming, committing
     git add <WILDCARD>
     git add <SPECIFICFILENAME>
 
 Interactive
+
     git add -i
 
 Interactive patch mode
+
     git add -p
 
 Remove a file from being tracked
+
     git rm FILENAME
 
 Rename a tracked file
+
     git mv FILENAME NEWFILENAME
 
 Commit changes with a message provided interactively ($GIT_EDITOR or $EDITOR)
+
     git commit
+    
+Or preview what would have occurred
+
+    git commit --dry-run
 
 Commit with a message provided on the CLI
+
     git commit -m'Some message'
 
 Commit and add any modified tracked files in one unified command
+
     git commit -a
 
 
-## Oops!
-Redo a recent commit's files or comment
-    git commit --amend
-Get the file system in the state you want it before issuing this command.
+# Fixing Mistakes
 
-Revert to a committed change (via a new commit), but don't commit
+## Amend
+Oops. You *just* committed something with a bad message or the wrong files. Redo a recent commit's file changes or comment. Get the file system in the state you want it before issuing this command.
+
+    git commit --amend
+
+or if you missed a few files that weren't in the last commit
+
+    git commit -a --amend
+
+or if you need to remove a file that wasn't supposed to be in the commit
+
+    # Commit two files.
+    # Oops. Only meant to commit one.
+    git reset --soft HEAD^
+    # Puts files back into staged area.
+    # Edit files and/or remove one file from staging.
+    git reset HEAD file1.txt
+    # Recommit
+    git commit -a -c ORIG_HEAD
+    
+or if you merely need to add more files or changes to the previous commit (not removing any files from the set)
+
+    git commit -a --amend
+
+## Revert
+Oops. You realize you made a bad commit yesterday, but it's already been shared across other Git repositories.
+
+Revert to a previous commit (via a new commit), but don't commit it until you review what's going to be in this commit. This is similar to a banking transaction in which you fix the old error by a new journal entry, not deleting the mistaken one. This leaves an audit trail. 
+
     git revert -n
 
+Revert is the better choice in the situation where the previous changes have been pushed to another repository. If they have, `amend` is a bad idea; you are re-writing history. Your remote repository may subsequently deny your amended push if the original was previously pushed.
+
+
+# Branches
 
 ## Branching
 Show local branch names
@@ -210,56 +310,67 @@ Show three branches and their merge status
     * Otherwise it shows a space (does not exist here).
             * Merge commits are denoted by a - sign.
 
-
 ## Merging
 Merge a branch into the current branch
+
     git merge <OTHERBRANCHNAME>
 
 Merge multiple branches into the current branch
-    git merge <BRANCHONE> <BRANCHTWO> <BRANCHTHREE> <BRANCHFOUR>
 
+    git merge <BRANCHONE> <BRANCHTWO> <BRANCHTHREE> <BRANCHFOUR>
 
 ## Pushing to a repo
 My Git playground repo URL
+
     git@github.com:matthewmccullough/hellogitworld.git
 
 Push the current branch
+
     git push
     
 Push to a specific remote and only a specific branch
+
     git push origin master
     git push <remote name> <branch name>
 
 Push a branch to a different name on the remote
+
     git push <remote name> <local branch name:remote branch name>
     git push origin master:newbranch
 
 Delete a remote branch
+
     git push origin somebranch:
     
 Push all branches, all tags
+
     git push --all
 
 Push even if refs disagree on parents
+
     git push --force
 
 
 ## Retrieving code
 Pull in the blobs into our repo, but don't merge them
+
     git fetch <remote name>
 
 What changes did we get?
+
     git log master..origin
 
 Merge them in
+
     git merge <remote name/remote branch>
 
 Automatic fetch and merge
+
     git pull
     git pull <remote name>
     git pull <remote name> <branch name>
 
-Examine .git/config file for automatic mappings
+Examine the project's `.git/config` file for automatic mappings
 
 
 ## Log history
@@ -287,51 +398,70 @@ Show a finite range of commit messages
 Switch to a given branch
     git checkout BRANCHNAME
 
-Switch to a detached (arbitrary) HEAD
+Switch to a detached (arbitrary, detached) HEAD
     git checkout TREEISH
 
 
 ## Showing Contents
-Show the contents of a commit
+Show the contents of the most recent commit in patch format
+
+    git show
+
+Show the contents of a arbitrary commit
+
     git show HEAD^^
 
 
 ## Composition of a file
 Visualize the file's commits that brought it to the current state, including  developer, branch, date
+
     git blame FILENAME
 
 
 ## Stash
 Safely stash work in progress while interrupted
+
     git stash
 
 Put the work back on the current branch via a merge, leaving it on the stack
+
     git stash apply
 
 Put the work back on the current branch and remove it from the stack
+
     git stash pop
 
 Show what is on the current stack of stashes
+
     git stash list
 
 
 ## Resetting to a Previous State
 Move staged files back to unstaged state
+
     git reset
 
 Discard any uncommitted changes
+
     git reset --hard
 
 Restore a single file to its last committed state
+
     git checkout -- SOMEFILE
 
 Restore a file to a past specified state
+
     git checkout TREEISH -- SOMEFILE
 
 
 ## Rebase
 Linearize the branch commits. Rebranches at the latest <source branch name> and replays committed branch work on top of that.
+
     git rebase <source branch name>
+    
+Or perform the rebase interactively, where you can change the order of the commits
+
+    git rebase -i <branchname>
 
 
 ## Tagging
@@ -480,16 +610,58 @@ Reset soft and hard
 Revert history to two commits ago (discarding them)
     git reset --hard HEAD^^
 
+## Cleaning
 Remove untracked files (generally temp, generated, compiled)
+
+    git clean
+    
+But it will complain that you aren't asking it to actually clean (force, `-f`)
+
+    git clean -f
+    
+Or preview (`-n`) what will be done
+
+    git clean -n
+
+Or clean directories (`-d`) too (not just files)
+
     git clean -f -d
+    
 
-SSH setup, keygen, save to GitHub
-* ssh-keygen
-* cat to authorized_keys
-* pbcopy to GitHub
-* Test with ssh localhost (passwordless)
-
+## Git Server
 Git local server
     git serve .
 Git read-only http interface
     git instaweb
+    
+# Making Git Better
+
+## Aliases
+Commands can be composed and renamed in Git to better suit your working style. For example, I've renamed `git status` to `git s` and I've composed `git log --oneline --decorate` to `git logod`.
+
+The configuration lives in a file in your home directory called `.gitconfig`.
+
+Alias can be set up in section like the following in the `.gitconfig` file:
+
+    [alias]
+      br = branch
+      bra = branch -a
+      s = status
+      cl = clone
+      ci = commit
+      co = checkout
+      d = diff
+      dh = diff HEAD
+      dc = diff --cached
+      who = shortlog -s --
+      ph = push
+      pl = pull
+      lg = log -p
+      lgod = log --oneline --decorate
+
+Let's discuss some of these shortcuts and try them out in our own
+
+
+## Dry Run
+Works with cleaning, commits
+--dry-run
