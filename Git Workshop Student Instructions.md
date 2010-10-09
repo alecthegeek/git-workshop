@@ -8,7 +8,7 @@ Please ensure you can sign on to the following wireless network:
 Wireless SSID:
     AI-MOBILE
 Password:
-    uberconf
+    students
     
 Additionally, try to connect to my laptop (ping it), as I'll host some repos there.  My notebook IP address is:
     10.0.1.2
@@ -18,6 +18,9 @@ These instructions are downloadable at GitHub from, of all things, a Git repo:
 [http://github.com/matthewmccullough/git-workshop](http://github.com/matthewmccullough/git-workshop)
 
 You don't need Git to download them though. GitHub has a download link at the top of each page that lets you get the files in ZIP format without a client Git tool.
+
+## Bookmarks
+Matthew maintains a list of interesting (hand-picked) resources about Git tools, features, releases, and uses.  These bookmarks are updated weekly and can be [found on Delicious](http://delicious.com/matthew.mc).
 
 
 ## Dates for other VCSes
@@ -90,7 +93,7 @@ Clone from GitHub (can be forked)
     git clone http://github.com/apache/commons-logging.git
 
 ## Creating a free hosted repo
-Free hosting for small private Git repositories can be found at a number of sites on the web. A canonical list is maintained at [the official Git site]().
+Free hosting for small private Git repositories can be found at a number of sites on the web. A canonical list is maintained at [the official Git site](http://git.wiki.kernel.org/index.php/GitHosting).
 
 The one we'll use today is [GitFarm](http://gitfarm.appspot.com), which is hosted on the Google App Engine.
 
