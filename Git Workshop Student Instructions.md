@@ -1,29 +1,61 @@
 # Git Workshop Instructions
 
 ## WiFi for Demos
-Please sign on to the following wireless network
+We may try to use a private network today (without port blocking or restrictions) to share code amongst ourselves. I've brought along a small WiFi device that can handle 30-50 people, but won't give us Internet access. That's alright though as we aren't going to use the 'net much.
+
+Please ensure you can sign on to the following wireless network:
 
 Wireless SSID:
     AI-MOBILE
 Password:
-    <PLACEHOLDER>
+    uberconf
+    
+Additionally, try to connect to my laptop (ping it), as I'll host some repos there.  My notebook IP address is:
+    10.0.1.2
 
-Instructions downloadable at GitHub:
+## Handouts
+These instructions are downloadable at GitHub from, of all things, a Git repo:
 [http://github.com/matthewmccullough/git-workshop](http://github.com/matthewmccullough/git-workshop)
 
-Matthew's notebook IP address:
-    10.0.1.2
+You don't need Git to download them though. GitHub has a download link at the top of each page that lets you get the files in ZIP format without a client Git tool.
 
 
 ## Dates for other VCSes
-SCCS
-RCS
-PVCS
-CVS, 1980s
-SVN, 1990s
+There have been a plethora of VCSes over the years. All seem like an incremental improvement over the previous model.
 
-Would you use a Palm Pilot?  Then why are you using CVS!
+* SCCS
+* RCS
+* PVCS
+* CVS, 1980s
+* SVN, 1990s
+* Git, 2005
 
+Some firms think SVN is the thing to move to. But would you use a Palm Pilot today? Then why are you using CVS or SVN? They are roughly the same age!
+
+We also need to be conservative in our choice of tools. We don't want to use something that is going to fade away next year. But Git isn't new by technology by any stretch. It is over 5 years old now.
+
+
+# Initial Git Setup
+
+## Setting up an SSH Key
+This next step works with msysGit (Git for Windows) or on any *NIX system.
+
+  ssh-keygen -t rsa -C "yourname@yourcompany.com"
+  
+The `-t` flag is the algorithms used to create the key. The `-C` flag is the comment attached to the key. The comment can serve as a reminder of which system you use this with if you are going to generate more than one key pair to partition your Git SSH key from other SSH-authenticated systems and servers.
+  
+Other algorithms, like DSA, can also be used for SSH authentication and are compatible with Git, since Git is merely using the operating system's underlying SSH capabilities.
+
+  ssh-keygen -t dsa -C "yourname@yourcompany.com"
+
+Lengthier instructions for SSH key generation can be found at the [excellent GitHub page](http://help.github.com/msysgit-key-setup/).
+
+The decision whether or not to use a passphrase for your SSH keys can [also be found on GitHub](http://help.github.com/working-with-key-passphrases/).
+
+## Sharing the Public portion of the Key
+Most Git services use half of the key we just generated for authenticating instead of the typical username and password.  In security terms, SSH keys are quite a bit stronger than usernames.
+
+Keep the private half of the key (`id_rsa`) protected. Give away the public half (`id_rsa.pub`) liberally. You could even store it in a directory service if desired.
 
 ## Setting up Git
 Establish the one-time parameters stored in your home directory
@@ -35,6 +67,8 @@ View our handiwork
     echo ~/.gitconfig
 
 
+# The Basics
+
 ## Building a new repo
     mkdir anewproject
     cd anewproject
@@ -43,13 +77,11 @@ View our handiwork
 or Naked, no local files, and with group UNIX permissions for headless use
     git --bare init --shared
 
-
 ## Cloning someone else's Git protocol-hosted repo
 List of Git-hosted projects
     http://git.apache.org
 Get a full copy of a Git project
     git clone git://git.apache.org/commons-logging.git
-
 
 ## Cloning a HTTP repo
 Apache also is pushing nightly syncs to GitHub
@@ -57,6 +89,19 @@ Apache also is pushing nightly syncs to GitHub
 Clone from GitHub (can be forked)
     git clone http://github.com/apache/commons-logging.git
 
+## Creating a free hosted repo
+Free hosting for small private Git repositories can be found at a number of sites on the web. A canonical list is maintained at [the official Git site]().
+
+The one we'll use today is [GitFarm](http://gitfarm.appspot.com), which is hosted on the Google App Engine.
+
+I've already set up a repository for us to try:
+
+    git clone http://students10@gitfarm.appspot.com/git/students10.git
+    password: password
+  
+    git clone http://students10:password@gitfarm.appspot.com/git/students10.git
+
+# The Internals
 
 ## Looking around the .git folder
 The .git folder is the "magic" directory
@@ -287,11 +332,26 @@ Linearize the branch commits. Rebranches at the latest <source branch name> and 
 
 
 ## Tagging
-Mark a tag at the current point in history on the current branch
+List all existing tags
+    git tag
+
+Mark a lightweight tag at the current point in history on the current branch
     git tag TAGNAME
 
-Mark a tag at some previous point in history
+Mark a lightweight tag at some previous point in history
     git tag TAGNAME TREEISH
+    
+Push tags to a remote repo
+    git push --tags
+    
+Overwrite an existing lightweight tag (locally)
+    git tag TAGNAME -f
+
+Create a tag object without a digital signature
+    git tag TAGNAME -a
+    
+Find tags containing a commit (do these tags have this fix?)
+    git tag --contains TREEISH
 
 
 ## Remotes
@@ -398,17 +458,35 @@ Compact old loose commits into pack files and prune orphans
 
 
 # TODO:
-git apply <patchfile>
-git email-patch
+Build an email that contains the patch
+    git email-patch
+Apply a patchfile
+    git apply <patchfile>
 
-Merge conflict
-Merge with rebase
-git add --continue
+Merge conflict. How do we fix it? How do we continue?
+    git add --continue
+    
+Merge with rebase as a better option for linear history
 
 Merge without commit
+    git merge --no-commit
+    
 Reset soft and hard
-git clean -f -d
+    git reset --hard
+    
+Revert history to two commits ago (discarding them)
+    git reset --hard HEAD^^
+
+Remove untracked files (generally temp, generated, compiled)
+    git clean -f -d
 
 SSH setup, keygen, save to GitHub
-git serve .
-git instaweb
+* ssh-keygen
+* cat to authorized_keys
+* pbcopy to GitHub
+* Test with ssh localhost (passwordless)
+
+Git local server
+    git serve .
+Git read-only http interface
+    git instaweb
