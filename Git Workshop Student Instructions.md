@@ -24,6 +24,7 @@ Matthew maintains a list of interesting (hand-picked) resources about Git tools,
 
 
 
+
 # Some History
 
 ## Dates for other VCSes
@@ -85,6 +86,7 @@ In the case of a gitolite server, it will report your repository permissions bef
 
 
 
+
 # Setting up Git
 
 ## Get binaries
@@ -123,6 +125,7 @@ Establish the one-time parameters stored in your home directory:
 View our handiwork
 
     echo ~/.gitconfig
+
 
 
 
@@ -169,6 +172,7 @@ I've already set up a repository for us to try:
 
 
 
+
 # The Internals
 
 ## Looking around the .git folder
@@ -197,7 +201,7 @@ Everything unstaged and staged diffed to the last commit
 
     git diff HEAD
 
-## Adding, removing, renaming, committing
+## Adding
     git add <WILDCARD>
     git add <SPECIFICFILENAME>
 
@@ -208,15 +212,18 @@ Interactive
 Interactive patch mode
 
     git add -p
-
+    
+## Removing
 Remove a file from being tracked
 
     git rm FILENAME
-
+    
+## Renaming (Moving)
 Rename a tracked file
 
     git mv FILENAME NEWFILENAME
 
+## Committing
 Commit changes with a message provided interactively ($GIT_EDITOR or $EDITOR)
 
     git commit
@@ -232,6 +239,24 @@ Commit with a message provided on the CLI
 Commit and add any modified tracked files in one unified command
 
     git commit -a
+
+## Git Ignores
+Stored in a file at any level of the tree.
+
+    .gitignore
+
+Can apply recursively.
+
+    **/*.tmp
+
+Glob pattern format
+
+    **/log*/*.log
+
+Exclusions
+
+    !logstuffweneedtokeep
+
 
 
 
@@ -269,6 +294,7 @@ Revert to a previous commit (via a new commit), but don't commit it until you re
     git revert -n
 
 Revert is the better choice in the situation where the previous changes have been pushed to another repository. If they have, `amend` is a bad idea; you are re-writing history. Your remote repository may subsequently deny your amended push if the original was previously pushed.
+
 
 
 
@@ -361,7 +387,6 @@ Push even if refs disagree on parents
 
     git push --force
 
-
 ## Retrieving code
 Pull in the blobs into our repo, but don't merge them
 
@@ -383,7 +408,6 @@ Automatic fetch and merge
 
 Examine the project's `.git/config` file for automatic mappings
 
-
 ## Log history
 Show all history
     git log
@@ -404,14 +428,12 @@ Show the diff (patch) of code changes from a specific commit
 Show a finite range of commit messages
     git log HEAD~4..HEAD^1
 
-
 ## Checkouts
 Switch to a given branch
     git checkout BRANCHNAME
 
 Switch to a detached (arbitrary, detached) HEAD
     git checkout TREEISH
-
 
 ## Showing Contents
 Show the contents of the most recent commit in patch format
@@ -422,12 +444,10 @@ Show the contents of a arbitrary commit
 
     git show HEAD^^
 
-
 ## Composition of a file
 Visualize the file's commits that brought it to the current state, including  developer, branch, date
 
     git blame FILENAME
-
 
 ## Stash
 Safely stash work in progress while interrupted
@@ -446,7 +466,6 @@ Show what is on the current stack of stashes
 
     git stash list
 
-
 ## Resetting to a Previous State
 Move staged files back to unstaged state
 
@@ -464,7 +483,6 @@ Restore a file to a past specified state
 
     git checkout TREEISH -- SOMEFILE
 
-
 ## Rebase
 Linearize the branch commits. Rebranches at the latest <source branch name> and replays committed branch work on top of that.
 
@@ -474,6 +492,15 @@ Or perform the rebase interactively, where you can change the order of the commi
 
     git rebase -i <branchname>
 
+## Rerere
+If you merge a branch often, you don't want to keep telling Git how to merge it every time you merge. With rerere enabled (just an option switch), it will remember your resolutions and use them next time to minimize your effort.
+
+    git config --global rerere.enabled 1
+
+
+
+
+# Managing Checkpoints
 
 ## Tagging
 List all existing tags
@@ -519,6 +546,7 @@ Add a new remote
 
 
 
+
 # Transporting Changes
 
 ## Bundles
@@ -534,25 +562,60 @@ Show contents of a bundle
 Pull in the blobs from a bundle as if they were a remote, but don't merge them
     git fetch catchupsusan.bundle
 
+## Patching
+Build an email that contains the patch
+
+    git email-patch
+
+Apply a patchfile
+
+    git apply <patchfile>
+
+
 
 
 # GUIs
 
-## IDEs
+## Bundled GUIs
 Visualizes previous commits
     gitk
 
 Facilitates new commits
     git gui
 
+## IDEs
+* NetBeans
+  * [NBGit plugin](http://nbgit.org/)
+  * Good support for day-to-day commands
+* Eclipse
+  * EGit (GUI) and JGit (framework) projects.
+  * Was separate, but now officially at Eclipse.org
+  * Git now the default new repository format at Eclipse.org
+  * Significant investment in this plugin.
+* IntelliJ
+  * Bundled with the product
+  * Earliest IDE to include support
+* SmartGit by Syntevo
+  * Standalone product
+  * Commercial and free licenses
+  * Derivative of SmartSVN
+
 ## Editors
 * emacs
 * vi
 * TextMate
 
+## Shell Plugins
+* Tortise Git
+* Cheetah
+* Git Shell Extensions (for Windows)
+* For Mac
+* For Unix
 
 
-# Interop
+
+
+# Interoperability
 
 ## SVN
 Clone one part (branch, folder, tree) of a Subversion repository
@@ -573,7 +636,7 @@ Push Git commits back to Subversion
     git svn dcommit
 
 ## ClearCase
-* List of tools
+* Conversion Tools
   * [CMBridge](http://www.clearvision-cm.com/version-control-connectors/cmbridge/ash_flypage.tpl.html)
     * Commercial tool
     * Round-trip conversion
@@ -597,30 +660,83 @@ Push Git commits back to Subversion
     * No history import
     * `gitclearcase initcc` to start
     * `gitclearcase pullcc` to push changes back in (checkout, merge, checkin to CC)
-    * If conflicts, resolve, then `gitclearcase commitcc`
+    * If conflicts, resolve, then `gitclearcase commitcc`    
+  * Native Git conversion
+    * Write your own scripts
+    * git fast-import
     
-* Native Git conversion
-  * Write your own scripts
-  * git fast-import
-    * File format
-    http://github.com/charleso/git-cc
+## Fast-Import
+Git `fast-import` is a human-readable transport format for recreating repositories. Ben Lynn has written a quick description of [fast-import](http://crypto.stanford.edu/~blynn/gitmagic/ch05.html) that is helpful to read.
+
+The standard use of fast-import is a one time import of source code history from another version control system. Using sed, awk, grep and similar tools, developers can craft an output to almost any version control system that matches this fast-import file format.
+    
+Example export:
+
+    blob
+    mark :1
+    data 13
+    Testing
+    JUNK
+
+    blob
+    mark :2
+    data 14
+    Testing2
+    JUNK
+
+    commit refs/heads/master
+    mark :3
+    author Matthew McCullough <matthewm@ambientideas.com> 1286663588 -0600
+    committer Matthew McCullough <matthewm@ambientideas.com> 1286663588 -0600
+    data 11
+    More stuff
+    M 100644 :1 test1.txt
+    M 100644 :2 test2.txt
+
+    blob
+    mark :4
+    data 22
+    Testing
+    JUNK
+    MOREJUNK
+
+    blob
+    mark :5
+    data 23
+    Testing2
+    JUNK
+    MOREJUNK
+
+    commit refs/heads/master
+    mark :6
+    author Matthew McCullough <matthewm@ambientideas.com> 1286664669 -0600
+    committer Matthew McCullough <matthewm@ambientideas.com> 1286664669 -0600
+    data 15
+    Another commit
+    from :3
+    M 100644 :4 test1.txt
+    M 100644 :5 test2.txt
+    
+Create a Git repository from this formatted input file:
+
+    mkdir importedproject
+    cd importedproject
+    git init
+    git fast-import --date-format=rfc2822 < /myimportfile
+    
+and then switch to the master branch after the import with:
+
+    git checkout master .
+    
+There is an equivalent `git fast-export` command that outputs an already-Git repository to this plaintext format. It can be used to study the format and learn how to craft your own import files.
+
+    git fast-export HEAD^^..HEAD
+    
+You'll likely want to redirect this output to a file.
+    
 
 
 # Power Tools
-
-## Git Ignores
-Stored in a file at any level of the tree.
-    .gitignore
-
-Can apply recursively.
-    **/*.tmp
-
-Glob pattern format
-    **/log*/*.log
-
-Exclusions
-    !logstuffweneedtokeep
-
 
 ## Searching in Code
 Find text in the tracked files
@@ -654,7 +770,7 @@ Start the bisect over again or to finish the process
 
     git bisect reset
 
-If you wish to automate the run of the tests and marking boolean outcome (testing)
+If you wish to automate the run of the tests and marking boolean outcome (testing), use the `run` command. The program must return 0 for `good`, 125 for `skip`, 1-127 (except 125) for `bad`, and any negative value like -1 for `abort`.
 
     git bisect run <COMMAND>
 
@@ -663,32 +779,46 @@ Diagram the result of testing
     git bisect visualize
 
 
-## Repo Maintenance
+
+
+# Maintenance
+
+## File System Check
 File system check:
     git fsck
 
+## Garbage Collect
 Compact old loose commits into pack files and prune orphans
     git gc
 
+## Prune    
+TODO: Prune
+
+    git prune
+
+
 
 # TODO:
-Build an email that contains the patch
-    git email-patch
-Apply a patchfile
-    git apply <patchfile>
 
+## Merge Conflicts
 Merge conflict. How do we fix it? How do we continue?
+
     git add --continue
     
-Merge with rebase as a better option for linear history
+Merge with rebase is a better option for linear history
 
 Merge without commit
+
     git merge --no-commit
     
+## Reset
+    
 Reset soft and hard
+
     git reset --hard
     
 Revert history to two commits ago (discarding them)
+
     git reset --hard HEAD^^
 
 ## Cleaning
@@ -709,7 +839,6 @@ Or clean directories (`-d`) too (not just files)
 
     git clean -f -d
     
-
 ## Git Server
 Run a local Git server on port 9418 (`DEFAULT_GIT_PORT`). The `--base-path` option sets up a virtual new root for cloning. Otherwise, the cloning end would need to know the actual path on your disk from the root to the repository folder. That is generally undesirable and the more common expectation is that repos are at the top level.
 
@@ -722,6 +851,7 @@ Then the client can clone this with:
 The `--export-all` option is necessary to force sharing of all repositories found, even if the marker file `git-daemon-export-ok` is not present in the specific repos you wish to share. If you do create the marker file, then the following will suffice:
 
     git daemon --base-path=. .
+
 
 
 
@@ -816,10 +946,8 @@ The `publish` command comes from the [ideas of Justin French](http://justinfrenc
 ## Submodules
 This is the equivalent to SVN externals.
 
-## Rerere
-If you merge a branch often, you don't want to keep telling Git how to merge it every time you merge. With rerere enabled (just an option switch), it will remember your resolutions and use them next time to minimize your effort.
 
-    git config --global rerere.enabled 1
+
 
 
 
@@ -832,6 +960,7 @@ If you merge a branch often, you don't want to keep telling Git how to merge it 
 
 
 
+
 # Ecosystem
 
 ## Git-converted Projects
@@ -840,7 +969,7 @@ If you merge a branch often, you don't want to keep telling Git how to merge it 
 * Android
 * Perl
 
-## Merge Tools
+## External Merge Tools
 Araxis
 
     git difftool HEAD HEAD^ -- test2.txt
