@@ -295,6 +295,34 @@ Revert to a previous commit (via a new commit), but don't commit it until you re
 
 Revert is the better choice in the situation where the previous changes have been pushed to another repository. If they have, `amend` is a bad idea; you are re-writing history. Your remote repository may subsequently deny your amended push if the original was previously pushed.
 
+## Reset
+    
+Reset soft and hard
+
+    git reset --hard
+    
+Revert history to two commits ago (discarding them)
+
+    git reset --hard HEAD^^
+
+## Cleaning
+Remove untracked files (generally temp, generated, compiled)
+
+    git clean
+    
+But it will complain that you aren't asking it to actually clean (force, `-f`)
+
+    git clean -f
+    
+Or preview (`-n` or `--dry-run`) what will be done
+
+    git clean -n
+    git clean --dry-run
+
+Or clean directories (`-d`) too (not just files)
+
+    git clean -f -d
+
 
 
 
@@ -410,29 +438,37 @@ Examine the project's `.git/config` file for automatic mappings
 
 ## Log history
 Show all history
+
     git log
 
 Show a week of history
+
     git log --since="one week ago"
 
 Show the history of one file
+
     git log -- SOMEFILENAME
 
 Show the number of lines modified (statistics)
+
     git log --stat
 
 Show the diff (patch) of code changes from a specific commit
+
     git log trunk~259 -p
     git log HEAD^^^ -p
 
 Show a finite range of commit messages
+
     git log HEAD~4..HEAD^1
 
 ## Checkouts
 Switch to a given branch
+
     git checkout BRANCHNAME
 
 Switch to a detached (arbitrary, detached) HEAD
+
     git checkout TREEISH
 
 ## Showing Contents
@@ -789,16 +825,19 @@ File system check:
 
 ## Garbage Collect
 Compact old loose commits into pack files and prune orphans
+
     git gc
 
 ## Prune    
-TODO: Prune
+Prune is a command that optimizes your repository 
 
     git prune
 
 
 
 # TODO:
+
+cat-file
 
 ## Merge Conflicts
 Merge conflict. How do we fix it? How do we continue?
@@ -811,35 +850,13 @@ Merge without commit
 
     git merge --no-commit
     
-## Reset
-    
-Reset soft and hard
 
-    git reset --hard
-    
-Revert history to two commits ago (discarding them)
 
-    git reset --hard HEAD^^
 
-## Cleaning
-Remove untracked files (generally temp, generated, compiled)
 
-    git clean
-    
-But it will complain that you aren't asking it to actually clean (force, `-f`)
+# Servers & Web Interfaces
 
-    git clean -f
-    
-Or preview (`-n` or `--dry-run`) what will be done
-
-    git clean -n
-    git clean --dry-run
-
-Or clean directories (`-d`) too (not just files)
-
-    git clean -f -d
-    
-## Git Server
+## Git Daemon
 Run a local Git server on port 9418 (`DEFAULT_GIT_PORT`). The `--base-path` option sets up a virtual new root for cloning. Otherwise, the cloning end would need to know the actual path on your disk from the root to the repository folder. That is generally undesirable and the more common expectation is that repos are at the top level.
 
     git daemon --export-all --base-path=. .
@@ -852,12 +869,46 @@ The `--export-all` option is necessary to force sharing of all repositories foun
 
     git daemon --base-path=. .
 
+## Gitosis
+The next lightest weight Git repository hosting solution.
 
+* Managed via cloning and pushing changes to a gitosis-admin repository.
+* No UI
+* Medium-grained control of access to repositories per user.
+* Keys committed to subfolder of admin repo and are pushed into `authorized_keys` by a post-commit hook.
 
+## Gitolite
+A medium-weight Git repository management solution.
 
-# Web Interfaces
+* Finer grained control over permissions and access than Gitosis.
+* Can lock glob patterns (branches, folders, repos) per repo
+* Like Gitosis, has a folder of the admin repo for keys, which are automatically inserted in `authorized_keys` when pushed.
+* Requires administrator to publish SSH keys for users (can't be published by the users)
+* Offers "personal playground" repos per user.
+* Offers feedback on permissions if ssh to the host is tried
+
+Sample output:
+
+    ssh gitolite@myserver
+    
+    PTY allocation request failed on channel 0
+    hello mccm06, the gitolite version here is v1.5.5-68-g3cf2970
+    the gitolite config gives you the following access:
+         R   W 	gitolite-admin
+        @R  @W 	testing
+        @R   W 	testinglessaccess
+    Connection to myserver closed.
+
+## Gitorious
+A "heavier" Ruby web interface and Git repository hosting solution.
+
+* Medium grained access control.
+* Public instance at Gitorious.com
+* Users can self-publish their SSH key via the web interface.
 
 ## Instaweb
+User interface only. No hosting capabilities.
+
 To run a Git read-only http interface while sitting at a prompt inside a git repository:
 
     git instaweb
@@ -874,7 +925,11 @@ On Windows, this is a [bit more challenging](http://asimilatorul.com/index.php/2
 [Atlassian Fisheye 2.2 has support for Git and Clearcase](http://www.clearvision-cm.com/clearvision-news/atlassian-fisheye-2.2-adds-support-for-git-and-ibm-rational-clearcase.html)
 
 ## ViewVC
+TODO: Is Git support ready yet? On an experimental branch?
 
+## Gerrit
+Tool for code reviews.
+Invented at Google.
 
 
 
