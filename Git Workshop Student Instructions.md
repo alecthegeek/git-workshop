@@ -23,6 +23,9 @@ You don't need Git to download them though. GitHub has a download link at the to
 Matthew maintains a list of interesting (hand-picked) resources about Git tools, features, releases, and uses.  These bookmarks are updated weekly and can be [found on Delicious](http://delicious.com/matthew.mc).
 
 
+
+# Some History
+
 ## Dates for other VCSes
 There have been a plethora of VCSes over the years. All seem like an incremental improvement over the previous model.
 
@@ -36,6 +39,7 @@ There have been a plethora of VCSes over the years. All seem like an incremental
 Some firms think SVN is the thing to move to. But would you use a Palm Pilot today? Then why are you using CVS or SVN? They are roughly the same age!
 
 We also need to be conservative in our choice of tools. We don't want to use something that is going to fade away next year. But Git isn't new by technology by any stretch. It is over 5 years old now.
+
 
 
 # SSH Setup
@@ -80,6 +84,7 @@ In the case of a gitolite server, it will report your repository permissions bef
     Connection to mybigserver closed.
 
 
+
 # Setting up Git
 
 ## Get binaries
@@ -118,6 +123,7 @@ Establish the one-time parameters stored in your home directory:
 View our handiwork
 
     echo ~/.gitconfig
+
 
 
 # The Basics
@@ -160,6 +166,8 @@ I've already set up a repository for us to try:
     password: password
   
     git clone http://students10:password@gitfarm.appspot.com/git/students10.git
+
+
 
 # The Internals
 
@@ -226,6 +234,7 @@ Commit and add any modified tracked files in one unified command
     git commit -a
 
 
+
 # Fixing Mistakes
 
 ## Amend
@@ -262,6 +271,7 @@ Revert to a previous commit (via a new commit), but don't commit it until you re
 Revert is the better choice in the situation where the previous changes have been pushed to another repository. If they have, `amend` is a bad idea; you are re-writing history. Your remote repository may subsequently deny your amended push if the original was previously pushed.
 
 
+
 # Branches
 
 ## Branching
@@ -276,12 +286,13 @@ List remote tracking branches only
     git branch -r
 
 Create a new branch and check it out
+
     git branch <new branch name> <from branch>
     git checkout <new branch name>
 
 Create a new branch and check it out in one unified operation
-    git checkout -b <new branch name> <from branch>
 
+    git checkout -b <new branch name> <from branch>
 
 ## Visualizing
 Show the contents of the last commit
@@ -466,25 +477,34 @@ Or perform the rebase interactively, where you can change the order of the commi
 
 ## Tagging
 List all existing tags
+
     git tag
 
 Mark a lightweight tag at the current point in history on the current branch
+
     git tag TAGNAME
 
 Mark a lightweight tag at some previous point in history
+
     git tag TAGNAME TREEISH
     
 Push tags to a remote repo
+
     git push --tags
     
 Overwrite an existing lightweight tag (locally)
+
     git tag TAGNAME -f
 
 Create a tag object without a digital signature
+
     git tag TAGNAME -a
     
 Find tags containing a commit (do these tags have this fix?)
+
     git tag --contains TREEISH
+    
+Note that `.git/refs/tags` are the non-object tags.
 
 
 ## Remotes
@@ -498,6 +518,9 @@ Add a new remote
     git remote add NAME URL
 
 
+
+# Transporting Changes
+
 ## Bundles
 Create a bundle from a range of commit treeish
     git bundle create catchupsusan.bundle HEAD~8..HEAD
@@ -510,15 +533,26 @@ Show contents of a bundle
 
 Pull in the blobs from a bundle as if they were a remote, but don't merge them
     git fetch catchupsusan.bundle
-    
 
-## GUIs
+
+
+# GUIs
+
+## IDEs
 Visualizes previous commits
     gitk
 
 Facilitates new commits
     git gui
 
+## Editors
+* emacs
+* vi
+* TextMate
+
+
+
+# Interop
 
 ## SVN
 Clone one part (branch, folder, tree) of a Subversion repository
@@ -538,6 +572,41 @@ Get new commits from Subversion
 Push Git commits back to Subversion
     git svn dcommit
 
+## ClearCase
+* List of tools
+  * [CMBridge](http://www.clearvision-cm.com/version-control-connectors/cmbridge/ash_flypage.tpl.html)
+    * Commercial tool
+    * Round-trip conversion
+    * SVN and Git support
+  * A workflow that uses [ClearCase for checkouts and Git for desktop version control](http://genaud.net/2008/08/clearcase-globally-git-locally/)
+    * Merely a manual way of working with the two systems
+    * Puts strain on the developer to maintain state in Git and push back to CC as needed
+    * Can require locking
+  * [Another workflow](http://www.turbodad.com/articles/24/12-revision) that slightly improves on the previous one
+    * Still no real automation
+    * Burdens the developer
+    * But doesn't require the approval, purchase or download of any bridging tools
+  * [git-cc scripts](http://github.com/charleso/git-cc)
+    * Provides `gitcc` script.
+    * Offers convenience "bridge" functions to put changes back into CC, treating it as the source-of-record.
+    * Similar to the git-svn bridge that is part of the official Git distribution
+  * [git-clearcase bridge](http://gitorious.org/git-clearcase)
+    * [Readme](http://gitorious.org/git-clearcase/git-clearcase/blobs/master/README)
+    * Perl based
+    * Only works with one view
+    * No history import
+    * `gitclearcase initcc` to start
+    * `gitclearcase pullcc` to push changes back in (checkout, merge, checkin to CC)
+    * If conflicts, resolve, then `gitclearcase commitcc`
+    
+* Native Git conversion
+  * Write your own scripts
+  * git fast-import
+    * File format
+    http://github.com/charleso/git-cc
+
+
+# Power Tools
 
 ## Git Ignores
 Stored in a file at any level of the tree.
@@ -561,24 +630,36 @@ Find text in the tracked files
 
 ## Finding a bug
 Start the process of finding a commit where tests broke
+
     git bisect start
 
 Mark current point as bad
+
     git bisect bad
 
 Mark an older point as good
+
     git bisect OLDERTREEISH
+    
+If you want to manually mark the status of the current checkout and proceed to the next, type either of the following:
+
+    git bisect bad
+    git bisect good
 
 Show the results of the bisect
+
     git bisect log
 
-Start the bisect over again
+Start the bisect over again or to finish the process
+
     git bisect reset
 
-Indicate the CLI command to run for the boolean outcome (testing)
+If you wish to automate the run of the tests and marking boolean outcome (testing)
+
     git bisect run <COMMAND>
 
 Diagram the result of testing
+
     git bisect visualize
 
 
@@ -619,9 +700,10 @@ But it will complain that you aren't asking it to actually clean (force, `-f`)
 
     git clean -f
     
-Or preview (`-n`) what will be done
+Or preview (`-n` or `--dry-run`) what will be done
 
     git clean -n
+    git clean --dry-run
 
 Or clean directories (`-d`) too (not just files)
 
@@ -629,10 +711,67 @@ Or clean directories (`-d`) too (not just files)
     
 
 ## Git Server
-Git local server
-    git serve .
-Git read-only http interface
+Run a local Git server on port 9418 (`DEFAULT_GIT_PORT`). The `--base-path` option sets up a virtual new root for cloning. Otherwise, the cloning end would need to know the actual path on your disk from the root to the repository folder. That is generally undesirable and the more common expectation is that repos are at the top level.
+
+    git daemon --export-all --base-path=. .
+    
+Then the client can clone this with:
+
+    git clone git://<somehostoripaddr>/myrepo
+    
+The `--export-all` option is necessary to force sharing of all repositories found, even if the marker file `git-daemon-export-ok` is not present in the specific repos you wish to share. If you do create the marker file, then the following will suffice:
+
+    git daemon --base-path=. .
+
+
+
+# Web Interfaces
+
+## Instaweb
+To run a Git read-only http interface while sitting at a prompt inside a git repository:
+
     git instaweb
+
+Then open a browser to [http://127.0.0.1:1234/](http://127.0.0.1:1234/).
+
+On Linux, just `apt-get` the `lighttpd` package.
+
+On Mac, use MacPorts or HomeBrew to install package `lighttpd`
+
+On Windows, this is a [bit more challenging](http://asimilatorul.com/index.php/2009/10/12/git-instaweb-using-mongoose-and-msysgit/) to set up.
+    
+## Fisheye
+[Atlassian Fisheye 2.2 has support for Git and Clearcase](http://www.clearvision-cm.com/clearvision-news/atlassian-fisheye-2.2-adds-support-for-git-and-ibm-rational-clearcase.html)
+
+## ViewVC
+
+
+
+
+# Continuous Integration
+
+## Bamboo
+Git support is available as a [plugin for Bamboo](http://www.atlassian.com/software/bamboo/tour/bamboo-plugin.jsp]
+
+[The Git plugin](https://plugins.atlassian.com/plugin/details/9510) was authored by Kristian Rosenvold of Zenior AS in Norway and Don Brown of Atlassian.
+
+For post-build pushes of repos up-stream, the [Pre/Post Build Command Plugin](https://plugins.atlassian.com/plugin/details/5581) will assist in calling git (must be on the Bamboo server's path):
+
+    git push FULLREPOURL BRANCHNAMETOPUSH:BRANCHNAMEONREMOTESIDE
+    
+With an actual URL
+
+    git push git://git.apache.org/commons-logging.git master-trial:master
+    
+Can walk through setting up a Git based project (from Apache Git sources)
+
+    [Bamboo on http://localhost:8085/](http://localhost:8085/)
+
+## Hudson
+
+[Hudson](http://hudson-ci.org/) is an open source CI server. It has excellent Git integration via the [Git plugin](http://wiki.hudson-ci.org/display/HUDSON/Git+Plugin).
+
+
     
 # Making Git Better
 
@@ -651,6 +790,7 @@ Alias can be set up in section like the following in the `.gitconfig` file:
       ci = commit
       co = checkout
       d = diff
+      dw = diff --word-diff
       dh = diff HEAD
       dc = diff --cached
       who = shortlog -s --
@@ -659,9 +799,95 @@ Alias can be set up in section like the following in the `.gitconfig` file:
       lg = log -p
       lgod = log --oneline --decorate
 
-Let's discuss some of these shortcuts and try them out in our own
+Let's discuss some of these shortcuts and try them out in our own.
+
+Aliases can also be added via the config command, but find this to be less efficient than editing the `~/.gitconfig` file directly.
+
+    git config –-global alias.who shortlog -s --
+    
+Aliases only allow for Git commands by default, but you can coax it to run shell commands by prefixing the alias with an exclamation `!`.
+
+    dm = !git diff | mate
+    dv = !git diff | vim
+    publish = !git checkout master && git pull && git checkout dev && git rebase master && git checkout master && git
+
+The `publish` command comes from the [ideas of Justin French](http://justinfrench.com/notebook/git-aliases-rock).
+
+## Submodules
+This is the equivalent to SVN externals.
+
+## Rerere
+If you merge a branch often, you don't want to keep telling Git how to merge it every time you merge. With rerere enabled (just an option switch), it will remember your resolutions and use them next time to minimize your effort.
+
+    git config --global rerere.enabled 1
 
 
-## Dry Run
-Works with cleaning, commits
---dry-run
+
+# Scalability
+* Linux kernel averaging 2-4 changes per hour continuously for the last 4 years
+* Have used with repos up to 2.4 GB in size, but that's on the large size
+* `git gc` on an 8GB project is quite slow
+* Modularization of your project is key (submodules)
+* A multi-GB file can cause Git to run out of memory while commiting it.
+
+
+
+# Ecosystem
+
+## Git-converted Projects
+* [Apache (select project only, read-only mode)](http://git.apache.org/)
+* 1.3 million projects at GitHub
+* Android
+* Perl
+
+## Merge Tools
+Araxis
+
+    git difftool HEAD HEAD^ -- test2.txt
+    
+Setup
+
+    #[diff]
+    #	tool = adifftool
+    #	external = git-difftool--helper
+    
+or
+
+    [difftool "adifftool"]
+    	cmd = araxis-difftool.sh \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
+    [difftool]
+    	prompt = false
+
+    #Automatically do all merges with this mergetool
+    [merge]
+    	tool = amergetool
+    [mergetool "amergetool"]
+    	cmd = araxis-mergetool.sh \"$PWD/$LOCAL\" \"$PWD/$BASE\" \"$PWD/$REMOTE\" \"$PWD/$MERGED\"
+    [mergetool]
+    	prompt = false
+    	
+## Shortlog
+For release notes
+
+    git shortlog
+
+Author summary only
+
+    git shortlog -s -10
+    
+## Describe
+Short notation to refer to a commit based on its position relative to a branch point.
+
+    git describe
+
+## Reflog
+Can reset to a known HEAD@{X} point
+
+    git reflog 
+    817c5e7 HEAD@{0}: commit (initial): Adding files
+    
+    git reset HEAD@{0}
+
+or
+
+    git merge HEAD@{0}
