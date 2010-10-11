@@ -27,6 +27,7 @@ Interactive
 
 Interactive patch mode
 
+    git add --patch
     git add -p
     
 ## Removing

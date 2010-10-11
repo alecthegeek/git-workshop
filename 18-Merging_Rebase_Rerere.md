@@ -83,9 +83,14 @@ Or if you want to bail out, a similar command to aborting a merge:
 
     git rebase --abort
     
-Squashing into one commit:
+You can squash multiple commits into one commit with the interactive rebase. Simple mark a commit as squashed.
 
-    git 
+Commands:
+
+    p, pick = use commit
+    e, edit = use commit, but stop for amending
+    s, squash = use commit, but meld into previous commit
+    Or if you remove a line, that commit will be excluded from the rebase.
 
 
 ## Rerere

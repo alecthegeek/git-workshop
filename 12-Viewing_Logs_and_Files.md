@@ -5,6 +5,10 @@ Show all history
 
     git log
 
+Show all history as a series of patches
+
+    git log -p
+
 Show a week of history
 
     git log --since="one week ago"

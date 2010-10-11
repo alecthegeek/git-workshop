@@ -90,7 +90,7 @@ Or clean directories (`-d`) too (not just files)
 ## Reflog
 The `reflog` is the transactional journal of what's been performed on your repository, including `reset`s, `commit`s, `merge`s and `rebase`s. Can be used to identify a treeish to `reset` to (a known `HEAD@{X}` point).
 
-    git reflog 
+    git reflog
     817c5e7 HEAD@{0}: commit (initial): Adding files
 
     git reset HEAD@{0}
