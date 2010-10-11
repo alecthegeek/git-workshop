@@ -170,10 +170,10 @@ The one we'll use today is [GitFarm](http://gitfarm.appspot.com), which is hoste
 
 I've already set up a repository for us to try:
 
-    git clone http://students10@gitfarm.appspot.com/git/students10.git
+    git clone http://students11@gitfarm.appspot.com/git/students11.git
     password: password
   
-    git clone http://students10:password@gitfarm.appspot.com/git/students10.git
+    git clone http://students11:password@gitfarm.appspot.com/git/students11.git
 
 
 
@@ -401,6 +401,7 @@ Merge multiple branches into the current branch
     git merge <BRANCHONE> <BRANCHTWO> <BRANCHTHREE> <BRANCHFOUR>
     
 ### Merge Conflicts
+TODO:
 --ours
 --theirs
 
@@ -508,11 +509,10 @@ To have the branch track a remote without re-checking it out, just edit the `.gi
     [remote "origin"]
     	url = http://students10:password@gitfarm.appspot.com/git/students10.git
     	fetch = +refs/heads/*:refs/remotes/origin/*
-
     
 and needs to be changed to look like this:
 
-    tag
+TODO    tag
 
 ## Log history
 Show all history
@@ -1089,6 +1089,21 @@ Git tracks the submodule and the parent module separately. To change, update, or
 
 Git helps the parent project precisely track the commit (not a symbolic `master` or `HEAD`) hash that the submodule is at for this parent project. This commit point can be different than another parent project that points to this submodule at a different commit point.
 
+To check out a project and set up the submodules:
+
+    git clone <git://url/yourrepo.git>
+    cd <yourrepo>
+    # Setup the submodule .gitmodules file
+    git submodule init
+    # Retrieve the submodules' code
+    git submodule update
+    
+If another developer changes the submodule, then commits the parent project and you pull and retrieve that, you'll need to update the submodules again to stop your `git status` from telling you the tree is dirty.
+
+    git submodule update
+    
+The main concept is just to put the submodule in whatever state you want it to be in, then add and commit from the parent project. If a colleague does that and then you pull the parent project, you need to `update` to get the latest submodule code. Remember that submodule changes need to be pushed distinctly from their parent. If a developer fails to do that, her colleagues won't be able to retrieve the commits; the parent project will be pointing to a hash that isn't publicly available.
+
 ## Reflog
 The `reflog` is the transactional journal of what's been performed on your repository, including `reset`s, `commit`s, `merge`s and `rebase`s. Can be used to identify a treeish to `reset` to (a known `HEAD@{X}` point).
 
@@ -1173,3 +1188,4 @@ Short notation to refer to a commit based on its position relative to a branch p
 
 # TODO:
 cat-file
+squash
