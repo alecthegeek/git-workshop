@@ -148,8 +148,13 @@ List of Git-hosted projects
 Get a full copy of a Git project
 
     git clone git://git.apache.org/commons-logging.git
+    
+or the [Grails project](http://github.com/grails/grails-core), which has several branches:
 
-## Cloning a HTTP repo
+    git clone http://github.com/grails/grails-core.git
+    git clone git://github.com/grails/grails-core.git
+
+## Cloning an HTTP repo
 Apache also is pushing nightly syncs to GitHub
 
     http://github.com/apache/commons-logging
@@ -330,10 +335,15 @@ Or clean directories (`-d`) too (not just files)
 
 ## Branching
 Show local branch names
+
     git branch
+
 Show all branch names
+
     git branch -a
+
 Show all branch names with URLs
+
     git branch -a -v
 
 List remote tracking branches only
@@ -350,21 +360,27 @@ Create a new branch and check it out in one unified operation
 
 ## Visualizing
 Show the contents of the last commit
+
     git show
 
 Show the current branch's merge status
+
     git show-branch
 
 Show every branch's merge status
+
     git show-branch --all
 
 Show the contents further back the parent tree
+
     git show-branch --more=5
 
 Show a max of 10 entries from no more than 1 hour ago for the master branch
+
     git show-branch --reflog="10,1 hour ago" --list master
 
 Show three branches and their merge status
+
     git show-branch master feature1 feature2
 
 ### Understanding the branch visualizations
@@ -383,6 +399,21 @@ Merge a branch into the current branch
 Merge multiple branches into the current branch
 
     git merge <BRANCHONE> <BRANCHTWO> <BRANCHTHREE> <BRANCHFOUR>
+    
+### Merge Conflicts
+--ours
+--theirs
+
+Merge conflict. How do we fix it? How do we continue?
+
+    git add --continue
+    
+Merge with rebase is a better option for linear history
+
+Merge without commit
+
+    git merge --no-commit
+
 
 ## Pushing to a repo
 My Git playground repo URL
@@ -434,7 +465,54 @@ Automatic fetch and merge
     git pull <remote name>
     git pull <remote name> <branch name>
 
-Examine the project's `.git/config` file for automatic mappings
+Examine the project's `.git/config` file for automatic mappings. Projects locally created won't be tracking the remote repository so you would need to `git push origin master` or `git push origin master` verbosely each time. You'd see an error like this:
+
+    git pull
+    You asked me to pull without telling me which branch you
+    want to merge with, and 'branch.master.merge' in
+    your configuration file does not tell me, either. Please
+    specify which branch you want to use on the command line and
+    try again (e.g. 'git pull <repository> <refspec>').
+    See git-pull(1) for details.
+
+    If you often merge with the same branch, you may want to
+    use something like the following in your configuration file:
+
+        [branch "master"]
+        remote = <nickname>
+        merge = <remote-ref>
+
+        [remote "<nickname>"]
+        url = <url>
+        fetch = <refspec>
+
+    See git-config(1) for details.
+
+or even if you specify a remote, but no branch:
+
+    git pull origin
+    From http://gitfarm.appspot.com/git/students10
+     * [new branch]      master     -> origin/master
+    You asked to pull from the remote 'origin', but did not specify
+    a branch. Because this is not the default configured remote
+    for your current branch, you must specify a branch on the command line.
+
+To have the branch track a remote without re-checking it out, just edit the `.git/config` file. The branch will look like this:
+
+    [core]
+    	repositoryformatversion = 0
+    	filemode = true
+    	bare = false
+    	logallrefupdates = true
+    	ignorecase = true
+    [remote "origin"]
+    	url = http://students10:password@gitfarm.appspot.com/git/students10.git
+    	fetch = +refs/heads/*:refs/remotes/origin/*
+
+    
+and needs to be changed to look like this:
+
+    tag
 
 ## Log history
 Show all history
@@ -462,7 +540,7 @@ Show a finite range of commit messages
 
     git log HEAD~4..HEAD^1
 
-## Checkouts
+## Checkout
 Switch to a given branch
 
     git checkout BRANCHNAME
@@ -572,12 +650,15 @@ Note that `.git/refs/tags` are the non-object tags.
 
 ## Remotes
 Show all remotes' simple names
+
     git remote
 
 Show remotes with URLs
+
     git remote -v
 
 Add a new remote
+
     git remote add NAME URL
 
 
@@ -586,16 +667,22 @@ Add a new remote
 # Transporting Changes
 
 ## Bundles
+Bundles are binary compressed archives that contain a series of commits. This format can be easily transmitted via email or USB stick.
+
 Create a bundle from a range of commit treeish
+
     git bundle create catchupsusan.bundle HEAD~8..HEAD
 
 Create a bundle from a range of time
+
     git bundle create catchupsusan.bundle --since=10.days master
 
 Show contents of a bundle
+
     git ls-remote catchupsusan.bundle
 
 Pull in the blobs from a bundle as if they were a remote, but don't merge them
+
     git fetch catchupsusan.bundle
 
 ## Patching
@@ -614,9 +701,11 @@ Apply a patchfile
 
 ## Bundled GUIs
 Visualizes previous commits
+
     gitk
 
 Facilitates new commits
+
     git gui
 
 ## IDEs
@@ -776,6 +865,7 @@ You'll likely want to redirect this output to a file.
 
 ## Searching in Code
 Find text in the tracked files
+
     git grep
     git grep <TREEISH>
 
@@ -820,36 +910,23 @@ Diagram the result of testing
 # Maintenance
 
 ## File System Check
-File system check:
+File system check verifies integrity. Finds corrupt objects.
+
     git fsck
 
-## Garbage Collect
-Compact old loose commits into pack files and prune orphans
-
-    git gc
-
-## Prune    
-Prune is a command that optimizes your repository 
+## Prune
+Prune is a command that optimizes your repository by removing commits that are not orphaned.
 
     git prune
 
+or to see what is orphaned, but not actually touch them:
 
+    git prune --dry-run
 
-# TODO:
+## Garbage Collect
+GC compacts old loose commits into pack files and `prune`s orphan commits. It is a superset of the `prune` command and is more commonly run than `prune`.
 
-cat-file
-
-## Merge Conflicts
-Merge conflict. How do we fix it? How do we continue?
-
-    git add --continue
-    
-Merge with rebase is a better option for linear history
-
-Merge without commit
-
-    git merge --no-commit
-    
+    git gc
 
 
 
@@ -957,6 +1034,7 @@ Can walk through setting up a Git based project (from Apache Git sources)
 [Hudson](http://hudson-ci.org/) is an open source CI server. It has excellent Git integration via the [Git plugin](http://wiki.hudson-ci.org/display/HUDSON/Git+Plugin).
 
 
+
     
 # Making Git Better
 
@@ -999,8 +1077,31 @@ Aliases only allow for Git commands by default, but you can coax it to run shell
 The `publish` command comes from the [ideas of Justin French](http://justinfrench.com/notebook/git-aliases-rock).
 
 ## Submodules
-This is the equivalent to SVN externals.
+This is the equivalent to SVN externals. Submodules are subdirectories of a Git project that point to another Git project.
 
+Starting in an existing Git repository, add a submodule.
+
+    git submodule add git://somehost/someproject.git mysubproj
+    
+This will create a subfolder named `mysubproj` in the current directory and a new file called `.gitmodules` that contains mappings to the repositories.
+
+Git tracks the submodule and the parent module separately. To change, update, or modify the submodule, `cd` into it's directory.
+
+Git helps the parent project precisely track the commit (not a symbolic `master` or `HEAD`) hash that the submodule is at for this parent project. This commit point can be different than another parent project that points to this submodule at a different commit point.
+
+## Reflog
+The `reflog` is the transactional journal of what's been performed on your repository, including `reset`s, `commit`s, `merge`s and `rebase`s. Can be used to identify a treeish to `reset` to (a known `HEAD@{X}` point).
+
+    git reflog 
+    817c5e7 HEAD@{0}: commit (initial): Adding files
+    
+    git reset HEAD@{0}
+
+or
+
+    git merge HEAD@{0}
+    
+Reflog entries are [kept for 90 days](https://www.kernel.org/pub/software/scm/git/docs/git-reflog.html). Orphaned entries are kept for 30 days.
 
 
 
@@ -1020,9 +1121,11 @@ This is the equivalent to SVN externals.
 
 ## Git-converted Projects
 * [Apache (select project only, read-only mode)](http://git.apache.org/)
-* 1.3 million projects at GitHub
+* 1.3 million projects at [GitHub](http://github.com)
 * Android
 * Perl
+* Grails
+* Hibernate
 
 ## External Merge Tools
 Araxis
@@ -1064,14 +1167,9 @@ Short notation to refer to a commit based on its position relative to a branch p
 
     git describe
 
-## Reflog
-Can reset to a known HEAD@{X} point
 
-    git reflog 
-    817c5e7 HEAD@{0}: commit (initial): Adding files
-    
-    git reset HEAD@{0}
 
-or
 
-    git merge HEAD@{0}
+
+# TODO:
+cat-file
