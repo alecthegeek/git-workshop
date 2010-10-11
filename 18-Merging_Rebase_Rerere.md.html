@@ -108,9 +108,14 @@ git rebase --continue
 <pre><code>git rebase --abort
 </code></pre>
 
-<p>Squashing into one commit:</p>
+<p>You can squash multiple commits into one commit with the interactive rebase. Simple mark a commit as squashed.</p>
 
-<pre><code>git
+<p>Commands:</p>
+
+<pre><code>p, pick = use commit
+e, edit = use commit, but stop for amending
+s, squash = use commit, but meld into previous commit
+Or if you remove a line, that commit will be excluded from the rebase.
 </code></pre>
 
 <h2>Rerere</h2>
