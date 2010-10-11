@@ -72,3 +72,12 @@ Glob pattern format
 Exclusions
 
     !logstuffweneedtokeep
+    
+## Checkout to a different Branch
+Switch to a given branch
+
+    git checkout BRANCHNAME
+
+Switch to a detached (arbitrary, detached) HEAD
+
+    git checkout TREEISH

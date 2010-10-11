@@ -21,3 +21,17 @@ Apache also is pushing nightly syncs to GitHub
 Clone from GitHub (can be forked)
 
     git clone http://github.com/apache/commons-logging.git
+
+## Remotes
+Show all remotes' simple names
+
+    git remote
+
+Show remotes with URLs
+
+    git remote -v
+
+Add a new remote
+
+    git remote add NAME URL
+
