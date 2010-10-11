@@ -7,18 +7,33 @@ Merge multiple branches into the current branch
 
     git merge <BRANCHONE> <BRANCHTWO> <BRANCHTHREE> <BRANCHFOUR>
     
+Or squashing all the commits into one, even if a fast forward:
+
+    git merge <BRANCHONE> --squash
+    
 ### Merge Conflicts
 Merge conflict. How do we fix it? How do we continue?
 
-    git add --continue
+    git add
+    git merge --continue
     
-Merge with rebase is a better option for linear history
+Or aborting
+
+    git merge --abort
+    
+Merge with rebase is a better option for maintaining linear history
 
 Merge without commit
 
     git merge --no-commit
-    
-TODO: --ours and --theirs
+
+Using the `ours` strategy
+
+    git merge -s ours <sombranch>
+
+Using the `recursive` strategy with `ours` or `theirs` suboptions. [Details here](http://www.kernel.org/pub/software/scm/git/docs/git-merge.html).
+
+    git merge -Xtheirs <sombranch>
 
 ## Visualizing Merges
 Show the current branch's merge status
@@ -58,6 +73,20 @@ Linearize the branch commits. Rebranches at the latest <source branch name> and 
 Or perform the rebase interactively, where you can change the order of the commits
 
     git rebase -i <branchname>
+    
+If conflicts occur:
+
+    git add
+    git rebase --continue
+    
+Or if you want to bail out, a similar command to aborting a merge:
+
+    git rebase --abort
+    
+Squashing into one commit:
+
+    git 
+
 
 ## Rerere
 If you merge a branch often, you don't want to keep telling Git how to merge it every time you merge. With rerere enabled (just an option switch), it will remember your resolutions and use them next time to minimize your effort.
