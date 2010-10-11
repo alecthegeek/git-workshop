@@ -34,7 +34,18 @@ Revert to a previous commit (via a new commit), but don't commit it until you re
 Revert is the better choice in the situation where the previous changes have been pushed to another repository. If they have, `amend` is a bad idea; you are re-writing history. Your remote repository may subsequently deny your amended push if the original was previously pushed.
 
 ## Resetting to a Previous State
-TODO: Difference between reset soft and hard
+There are several modes of operation for reset for which the [difference is quite striking. These include soft, hard, mixed, merge, and keep](http://www.kernel.org/pub/software/scm/git/docs/git-reset.html).
+
+* Soft
+  * Does not touch the index or working directory
+* Hard
+  * Discards index and working directory changes
+* Mixed
+  * Changes the index, but not the working directory (the default behavior)
+* Merge
+  * Resets index, updates working directory (clean files), keeps untracked changes.
+* Keep
+  * 2 way merge
 
 Discard any uncommitted changes
 

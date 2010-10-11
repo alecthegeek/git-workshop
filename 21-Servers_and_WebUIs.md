@@ -69,7 +69,7 @@ On Windows, this is a [bit more challenging](http://asimilatorul.com/index.php/2
 [Atlassian Fisheye 2.2 has support for Git and Clearcase](http://www.clearvision-cm.com/clearvision-news/atlassian-fisheye-2.2-adds-support-for-git-and-ibm-rational-clearcase.html)
 
 ## ViewVC
-TODO: Is Git support ready yet? On an experimental branch?
+Not supporting Git yet. [Discussion](http://viewvc.tigris.org/ds/viewMessage.do?dsForumId=4255&dsMessageId=2413932) does not seem to indicate plans to support Git.
 
 ## Gerrit
 Tool for code reviews.
