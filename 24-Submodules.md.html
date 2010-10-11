@@ -1,0 +1,35 @@
+<h1>Submodules</h1>
+
+<h2>Creating Submodules</h2>
+
+<p>This is the equivalent to SVN externals. Submodules are subdirectories of a Git project that point to another Git project.</p>
+
+<p>Starting in an existing Git repository, add a submodule.</p>
+
+<pre><code>git submodule add git://somehost/someproject.git mysubproj
+</code></pre>
+
+<p>This will create a subfolder named <code>mysubproj</code> in the current directory and a new file called <code>.gitmodules</code> that contains mappings to the repositories.</p>
+
+<p>Git tracks the submodule and the parent module separately. To change, update, or modify the submodule, <code>cd</code> into it's directory.</p>
+
+<p>Git helps the parent project precisely track the commit (not a symbolic <code>master</code> or <code>HEAD</code>) hash that the submodule is at for this parent project. This commit point can be different than another parent project that points to this submodule at a different commit point.</p>
+
+<h2>Restoring Submodules</h2>
+
+<p>To check out a project and set up the submodules:</p>
+
+<pre><code>git clone &lt;git://url/yourrepo.git&gt;
+cd &lt;yourrepo&gt;
+# Setup the submodule .gitmodules file
+git submodule init
+# Retrieve the submodules' code
+git submodule update
+</code></pre>
+
+<p>If another developer changes the submodule, then commits the parent project and you pull and retrieve that, you'll need to update the submodules again to stop your <code>git status</code> from telling you the tree is dirty.</p>
+
+<pre><code>git submodule update
+</code></pre>
+
+<p>The main concept is just to put the submodule in whatever state you want it to be in, then add and commit from the parent project. If a colleague does that and then you pull the parent project, you need to <code>update</code> to get the latest submodule code. Remember that submodule changes need to be pushed distinctly from their parent. If a developer fails to do that, her colleagues won't be able to retrieve the commits; the parent project will be pointing to a hash that isn't publicly available.</p>

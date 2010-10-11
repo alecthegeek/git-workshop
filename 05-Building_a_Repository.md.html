@@ -1,0 +1,35 @@
+<h1>Building a New Repository</h1>
+
+<h2>Creating a regular repository</h2>
+
+<pre><code>mkdir anewproject
+cd anewproject
+git init
+</code></pre>
+
+<h2>Creating a bare repository for hosting (not interacting with locally)</h2>
+
+<p>or Naked, no local files, and with group UNIX permissions for headless use</p>
+
+<pre><code>git --bare init --shared
+</code></pre>
+
+<p>And once pushed to another location, you'll want it <em>tracked</em>, which can be done manually via editing the <code>.git/config file</code> or by issuing these commands:</p>
+
+<pre><code>git config branch.master.remote origin
+git config branch.master.merge refs/heads/master
+</code></pre>
+
+<h2>Creating a free hosted repo</h2>
+
+<p>Free hosting for small private Git repositories can be found at a number of sites on the web. A canonical list is maintained at <a href="http://git.wiki.kernel.org/index.php/GitHosting">the official Git site</a>.</p>
+
+<p>The one we'll use today is <a href="http://gitfarm.appspot.com">GitFarm</a>, which is hosted on the Google App Engine.</p>
+
+<p>I've already set up a repository for us to try:</p>
+
+<pre><code>git clone http://students11@gitfarm.appspot.com/git/students11.git
+password: password
+
+git clone http://students11:password@gitfarm.appspot.com/git/students11.git
+</code></pre>

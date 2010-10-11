@@ -1,0 +1,43 @@
+<h1>Customizing Git</h1>
+
+<h2>Aliases</h2>
+
+<p>Commands can be composed and renamed in Git to better suit your working style. For example, I've renamed <code>git status</code> to <code>git s</code> and I've composed <code>git log --oneline --decorate</code> to <code>git logod</code>.</p>
+
+<p>The configuration lives in a file in your home directory called <code>.gitconfig</code>.</p>
+
+<p>Alias can be set up in section like the following in the <code>.gitconfig</code> file:</p>
+
+<pre><code>[alias]
+  br = branch
+  bra = branch -a
+  s = status
+  cl = clone
+  ci = commit
+  co = checkout
+  d = diff
+  dw = diff --word-diff
+  dh = diff HEAD
+  dc = diff --cached
+  who = shortlog -s --
+  ph = push
+  pl = pull
+  lg = log -p
+  lgod = log --oneline --decorate
+</code></pre>
+
+<p>Let's discuss some of these shortcuts and try them out in our own.</p>
+
+<p>Aliases can also be added via the config command, but find this to be less efficient than editing the <code>~/.gitconfig</code> file directly.</p>
+
+<pre><code>git config –-global alias.who shortlog -s --
+</code></pre>
+
+<p>Aliases only allow for Git commands by default, but you can coax it to run shell commands by prefixing the alias with an exclamation <code>!</code>.</p>
+
+<pre><code>dm = !git diff | mate
+dv = !git diff | vim
+publish = !git checkout master &amp;&amp; git pull &amp;&amp; git checkout dev &amp;&amp; git rebase master &amp;&amp; git checkout master &amp;&amp; git
+</code></pre>
+
+<p>The <code>publish</code> command comes from the <a href="http://justinfrench.com/notebook/git-aliases-rock">ideas of Justin French</a>.</p>

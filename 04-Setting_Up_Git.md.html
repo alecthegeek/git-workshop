@@ -1,0 +1,52 @@
+<h1>Setting up Git</h1>
+
+<h2>Get binaries</h2>
+
+<p>On UNIX:</p>
+
+<ul>
+<li>From source
+<ul>
+<li><a href="http://git.kernel.org/?p=git/git.git;a=summary">Web UI to browse source</a></li>
+<li>Git repo for source: <code>git://git.kernel.org/pub/scm/git/git.git</code></li>
+</ul></li>
+<li>Package manager
+<ul>
+<li><code>apt-get git-core</code></li>
+<li><code>apt-get git-gui</code></li>
+<li><code>apt-get git-doc</code></li>
+<li><code>apt-get git-svn</code></li>
+</ul></li>
+</ul>
+
+<p>On Mac:</p>
+
+<ul>
+<li><a href="http://www.macports.org/">MacPorts</a> (user-compiled)</li>
+<li><a href="http://github.com/mxcl/homebrew">HomeBrew</a> (user-compiled)</li>
+<li><a href="http://code.google.com/p/git-osx-installer/">git-osx-installer</a> (precompiled)</li>
+</ul>
+
+<p>On Windows:</p>
+
+<ul>
+<li>Two <a href="http://code.google.com/p/msysgit/">msysGit</a> choices: a full toolkit, or just a precompiled distribution.</li>
+<li><a href="http://msysgit.googlecode.com/files/Git-1.7.3.1-preview20101002.exe">Precompiled</a> is named "Git-XXXexe"</li>
+<li><a href="http://msysgit.googlecode.com/files/msysGit-fullinstall-1.7.3.1-preview20101002.exe">Full toolkit</a> with gcc compiler is named "msysGit-fullinstall-XXX.exe"</li>
+</ul>
+
+<p>If you get stuck, a series of <a href="http://help.github.com/">help pages at GitHub</a> are almost certain to assist.</p>
+
+<h2>Configuring your Git username and email address</h2>
+
+<p>Establish the one-time parameters stored in your home directory:</p>
+
+<pre><code>git config --global user.name "Your Name"
+git config --global user.email "you@example.com"
+git config --global color.ui "auto"
+</code></pre>
+
+<p>View our handiwork</p>
+
+<pre><code>echo ~/.gitconfig
+</code></pre>

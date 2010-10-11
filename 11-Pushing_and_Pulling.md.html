@@ -1,0 +1,133 @@
+<h1>Pushing and Pulling</h1>
+
+<h2>Pushing to a repo</h2>
+
+<p>My Git playground repo URL</p>
+
+<pre><code>git@github.com:matthewmccullough/hellogitworld.git
+</code></pre>
+
+<p>Push the current branch</p>
+
+<pre><code>git push
+</code></pre>
+
+<p>Push to a specific remote and only a specific branch</p>
+
+<pre><code>git push origin master
+git push &lt;remote name&gt; &lt;branch name&gt;
+</code></pre>
+
+<p>Push a branch to a different name on the remote</p>
+
+<pre><code>git push &lt;remote name&gt; &lt;local branch name:remote branch name&gt;
+git push origin master:newbranch
+</code></pre>
+
+<p>Delete a remote branch</p>
+
+<pre><code>git push origin somebranch:
+</code></pre>
+
+<p>Push all branches, all tags</p>
+
+<pre><code>git push --all
+</code></pre>
+
+<p>Push even if refs disagree on parents</p>
+
+<pre><code>git push --force
+</code></pre>
+
+<h2>Retrieving code</h2>
+
+<p>Pull in the blobs into our repo, but don't merge them</p>
+
+<pre><code>git fetch &lt;remote name&gt;
+</code></pre>
+
+<p>What changes did we get?</p>
+
+<pre><code>git log master..origin
+</code></pre>
+
+<p>Merge them in</p>
+
+<pre><code>git merge &lt;remote name/remote branch&gt;
+</code></pre>
+
+<p>Automatic fetch and merge</p>
+
+<pre><code>git pull
+git pull &lt;remote name&gt;
+git pull &lt;remote name&gt; &lt;branch name&gt;
+</code></pre>
+
+<p>Examine the project's <code>.git/config</code> file for automatic mappings. Projects locally created won't be tracking the remote repository so you would need to <code>git push origin master</code> or <code>git push origin master</code> verbosely each time. You'd see an error like this:</p>
+
+<pre><code>git pull
+You asked me to pull without telling me which branch you
+want to merge with, and 'branch.master.merge' in
+your configuration file does not tell me, either. Please
+specify which branch you want to use on the command line and
+try again (e.g. 'git pull &lt;repository&gt; &lt;refspec&gt;').
+See git-pull(1) for details.
+
+If you often merge with the same branch, you may want to
+use something like the following in your configuration file:
+
+    [branch "master"]
+    remote = &lt;nickname&gt;
+    merge = &lt;remote-ref&gt;
+
+    [remote "&lt;nickname&gt;"]
+    url = &lt;url&gt;
+    fetch = &lt;refspec&gt;
+
+See git-config(1) for details.
+</code></pre>
+
+<p>or even if you specify a remote, but no branch:</p>
+
+<pre><code>git pull origin
+From http://gitfarm.appspot.com/git/students10
+ * [new branch]      master     -&gt; origin/master
+You asked to pull from the remote 'origin', but did not specify
+a branch. Because this is not the default configured remote
+for your current branch, you must specify a branch on the command line.
+</code></pre>
+
+<p>To have the branch track a remote without re-checking it out, just edit the <code>.git/config</code> file. The branch will look like this:</p>
+
+<pre><code>[core]
+    repositoryformatversion = 0
+    filemode = true
+    bare = false
+    logallrefupdates = true
+    ignorecase = true
+[remote "origin"]
+    url = http://students10:password@gitfarm.appspot.com/git/students10.git
+    fetch = +refs/heads/*:refs/remotes/origin/*
+</code></pre>
+
+<p>and needs to be changed to look like this:</p>
+
+<pre><code>[core]
+    repositoryformatversion = 0
+    filemode = true
+    bare = false
+    logallrefupdates = true
+    ignorecase = true
+[remote "origin"]
+    url = http://students10:password@gitfarm.appspot.com/git/students10.git
+    fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+    remote = origin
+    merge = refs/heads/master
+</code></pre>
+
+<p>or setup with the git config command like this:</p>
+
+<pre><code>git config branch.master.remote origin
+git config branch.master.merge refs/heads/master
+</code></pre>

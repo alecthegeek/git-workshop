@@ -1,0 +1,133 @@
+<h1>Fixing Mistakes</h1>
+
+<h2>Amend</h2>
+
+<p>Oops. You <em>just</em> committed something with a bad message or the wrong files. Redo a recent commit's file changes or comment. Get the file system in the state you want it before issuing this command.</p>
+
+<pre><code>git commit --amend
+</code></pre>
+
+<p>or if you missed a few files that weren't in the last commit</p>
+
+<pre><code>git commit -a --amend
+</code></pre>
+
+<p>or if you need to remove a file that wasn't supposed to be in the commit</p>
+
+<pre><code># Commit two files.
+# Oops. Only meant to commit one.
+git reset --soft HEAD^
+# Puts files back into staged area.
+# Edit files and/or remove one file from staging.
+git reset HEAD file1.txt
+# Recommit
+git commit -a -c ORIG_HEAD
+</code></pre>
+
+<p>or if you merely need to add more files or changes to the previous commit (not removing any files from the set)</p>
+
+<pre><code>git commit -a --amend
+</code></pre>
+
+<h2>Revert</h2>
+
+<p>Oops. You realize you made a bad commit yesterday, but it's already been shared across other Git repositories.</p>
+
+<p>Revert to a previous commit (via a new commit), but don't commit it until you review what's going to be in this commit. This is similar to a banking transaction in which you fix the old error by a new journal entry, not deleting the mistaken one. This leaves an audit trail. </p>
+
+<pre><code>git revert -n
+</code></pre>
+
+<p>Revert is the better choice in the situation where the previous changes have been pushed to another repository. If they have, <code>amend</code> is a bad idea; you are re-writing history. Your remote repository may subsequently deny your amended push if the original was previously pushed.</p>
+
+<h2>Resetting to a Previous State</h2>
+
+<p>There are several modes of operation for reset for which the <a href="http://www.kernel.org/pub/software/scm/git/docs/git-reset.html">difference is quite striking. These include soft, hard, mixed, merge, and keep</a>.</p>
+
+<ul>
+<li>Soft
+<ul>
+<li>Does not touch the index or working directory</li>
+</ul></li>
+<li>Hard
+<ul>
+<li>Discards index and working directory changes</li>
+</ul></li>
+<li>Mixed
+<ul>
+<li>Changes the index, but not the working directory (the default behavior)</li>
+</ul></li>
+<li>Merge
+<ul>
+<li>Resets index, updates working directory (clean files), keeps untracked changes.</li>
+</ul></li>
+<li>Keep
+<ul>
+<li>2 way merge</li>
+</ul></li>
+</ul>
+
+<p>Discard any uncommitted changes</p>
+
+<pre><code>git reset --hard
+</code></pre>
+
+<p>Revert history to two commits ago (discarding them)</p>
+
+<pre><code>git reset --hard HEAD^^
+</code></pre>
+
+<p>Move staged files back to unstaged state</p>
+
+<pre><code>git reset
+</code></pre>
+
+<p>Restore a single file to its last committed state</p>
+
+<pre><code>git checkout -- SOMEFILE
+</code></pre>
+
+<p>Restore a file to a past specified state</p>
+
+<pre><code>git checkout TREEISH -- SOMEFILE
+</code></pre>
+
+<h2>Cleaning</h2>
+
+<p>Remove untracked files (generally temp, generated, compiled)</p>
+
+<pre><code>git clean
+</code></pre>
+
+<p>But it will complain that you aren't asking it to actually clean (force, <code>-f</code>)</p>
+
+<pre><code>git clean -f
+</code></pre>
+
+<p>Or preview (<code>-n</code> or <code>--dry-run</code>) what will be done</p>
+
+<pre><code>git clean -n
+git clean --dry-run
+</code></pre>
+
+<p>Or clean directories (<code>-d</code>) too (not just files)</p>
+
+<pre><code>git clean -f -d
+</code></pre>
+
+<h2>Reflog</h2>
+
+<p>The <code>reflog</code> is the transactional journal of what's been performed on your repository, including <code>reset</code>s, <code>commit</code>s, <code>merge</code>s and <code>rebase</code>s. Can be used to identify a treeish to <code>reset</code> to (a known <code>HEAD@{X}</code> point).</p>
+
+<pre><code>git reflog 
+817c5e7 HEAD@{0}: commit (initial): Adding files
+
+git reset HEAD@{0}
+</code></pre>
+
+<p>or</p>
+
+<pre><code>git merge HEAD@{0}
+</code></pre>
+
+<p>Reflog entries are <a href="https://www.kernel.org/pub/software/scm/git/docs/git-reflog.html">kept for 90 days</a>. Orphaned entries are kept for 30 days.</p>

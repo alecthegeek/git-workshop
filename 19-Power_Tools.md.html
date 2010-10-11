@@ -1,0 +1,52 @@
+<h1>Power Tools</h1>
+
+<h2>Searching in Code</h2>
+
+<p>Find text in the tracked files</p>
+
+<pre><code>git grep
+git grep &lt;TREEISH&gt;
+</code></pre>
+
+<h2>Finding a bug</h2>
+
+<p>Start the process of finding a commit where tests broke</p>
+
+<pre><code>git bisect start
+</code></pre>
+
+<p>Mark current point as bad</p>
+
+<pre><code>git bisect bad
+</code></pre>
+
+<p>Mark an older point as good</p>
+
+<pre><code>git bisect OLDERTREEISH
+</code></pre>
+
+<p>If you want to manually mark the status of the current checkout and proceed to the next, type either of the following:</p>
+
+<pre><code>git bisect bad
+git bisect good
+</code></pre>
+
+<p>Show the results of the bisect</p>
+
+<pre><code>git bisect log
+</code></pre>
+
+<p>Start the bisect over again or to finish the process</p>
+
+<pre><code>git bisect reset
+</code></pre>
+
+<p>If you wish to automate the run of the tests and marking boolean outcome (testing), use the <code>run</code> command. The program must return 0 for <code>good</code>, 125 for <code>skip</code>, 1-127 (except 125) for <code>bad</code>, and any negative value like -1 for <code>abort</code>.</p>
+
+<pre><code>git bisect run &lt;COMMAND&gt;
+</code></pre>
+
+<p>Diagram the result of testing</p>
+
+<pre><code>git bisect visualize
+</code></pre>

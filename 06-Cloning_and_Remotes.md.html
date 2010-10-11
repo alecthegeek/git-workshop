@@ -1,0 +1,48 @@
+<h1>Cloning Basics</h1>
+
+<h2>Cloning someone else's Git protocol-hosted repo</h2>
+
+<p>List of Git-hosted projects</p>
+
+<pre><code>http://git.apache.org
+</code></pre>
+
+<p>Get a full copy of a Git project</p>
+
+<pre><code>git clone git://git.apache.org/commons-logging.git
+</code></pre>
+
+<p>or the <a href="http://github.com/grails/grails-core">Grails project</a>, which has several branches:</p>
+
+<pre><code>git clone http://github.com/grails/grails-core.git
+git clone git://github.com/grails/grails-core.git
+</code></pre>
+
+<h2>Cloning an HTTP repo</h2>
+
+<p>Apache also is pushing nightly syncs to GitHub</p>
+
+<pre><code>http://github.com/apache/commons-logging
+</code></pre>
+
+<p>Clone from GitHub (can be forked)</p>
+
+<pre><code>git clone http://github.com/apache/commons-logging.git
+</code></pre>
+
+<h2>Remotes</h2>
+
+<p>Show all remotes' simple names</p>
+
+<pre><code>git remote
+</code></pre>
+
+<p>Show remotes with URLs</p>
+
+<pre><code>git remote -v
+</code></pre>
+
+<p>Add a new remote</p>
+
+<pre><code>git remote add NAME URL
+</code></pre>

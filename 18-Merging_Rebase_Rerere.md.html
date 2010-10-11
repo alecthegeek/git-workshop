@@ -1,0 +1,151 @@
+<h2>Merging</h2>
+
+<p>Merge a branch into the current branch</p>
+
+<pre><code>git merge &lt;OTHERBRANCHNAME&gt;
+</code></pre>
+
+<p>Merge multiple branches into the current branch</p>
+
+<pre><code>git merge &lt;BRANCHONE&gt; &lt;BRANCHTWO&gt; &lt;BRANCHTHREE&gt; &lt;BRANCHFOUR&gt;
+</code></pre>
+
+<p>Or squashing all the commits into one, even if a fast forward:</p>
+
+<pre><code>git merge &lt;BRANCHONE&gt; --squash
+</code></pre>
+
+<h3>Merge Conflicts</h3>
+
+<p>Merge conflict. How do we fix it? How do we continue?</p>
+
+<pre><code>git add
+git merge --continue
+</code></pre>
+
+<p>Or aborting</p>
+
+<pre><code>git merge --abort
+</code></pre>
+
+<p>Merge with rebase is a better option for maintaining linear history</p>
+
+<p>Merge without commit</p>
+
+<pre><code>git merge --no-commit
+</code></pre>
+
+<p>Using the <code>ours</code> strategy</p>
+
+<pre><code>git merge -s ours &lt;sombranch&gt;
+</code></pre>
+
+<p>Using the <code>recursive</code> strategy with <code>ours</code> or <code>theirs</code> suboptions. <a href="http://www.kernel.org/pub/software/scm/git/docs/git-merge.html">Details here</a>.</p>
+
+<pre><code>git merge -Xtheirs &lt;sombranch&gt;
+</code></pre>
+
+<h2>Visualizing Merges</h2>
+
+<p>Show the current branch's merge status</p>
+
+<pre><code>git show-branch
+</code></pre>
+
+<p>Show every branch's merge status</p>
+
+<pre><code>git show-branch --all
+</code></pre>
+
+<p>Show the contents further back the parent tree</p>
+
+<pre><code>git show-branch --more=5
+</code></pre>
+
+<p>Show a max of 10 entries from no more than 1 hour ago for the master branch</p>
+
+<pre><code>git show-branch --reflog="10,1 hour ago" --list master
+</code></pre>
+
+<p>Show three branches and their merge status</p>
+
+<pre><code>git show-branch master feature1 feature2
+</code></pre>
+
+<h3>Understanding the branch visualizations</h3>
+
+<ul>
+<li>The branch head that is pointed at by HEAD is prefixed with an asterisk * character</li>
+<li>Other heads are prefixed with a ! character.</li>
+<li>Following these N lines, one-line log for each commit is displayed, indented N places.
+<ul>
+<li>If a commit is on the I-th branch, the I-th indentation character shows a + sign</li>
+<li>Otherwise it shows a space (does not exist here).
+    * Merge commits are denoted by a - sign.</li>
+</ul></li>
+</ul>
+
+<h2>Rebase</h2>
+
+<p>Linearize the branch commits. Rebranches at the latest <source branch name> and replays committed branch work on top of that.</p>
+
+<pre><code>git rebase &lt;source branch name&gt;
+</code></pre>
+
+<p>Or perform the rebase interactively, where you can change the order of the commits</p>
+
+<pre><code>git rebase -i &lt;branchname&gt;
+</code></pre>
+
+<p>If conflicts occur:</p>
+
+<pre><code>git add
+git rebase --continue
+</code></pre>
+
+<p>Or if you want to bail out, a similar command to aborting a merge:</p>
+
+<pre><code>git rebase --abort
+</code></pre>
+
+<p>Squashing into one commit:</p>
+
+<pre><code>git
+</code></pre>
+
+<h2>Rerere</h2>
+
+<p>If you merge a branch often, you don't want to keep telling Git how to merge it every time you merge. With rerere enabled (just an option switch), it will remember your resolutions and use them next time to minimize your effort.</p>
+
+<pre><code>git config --global rerere.enabled 1
+</code></pre>
+
+<h2>External Merge Tools</h2>
+
+<p>Setup diff in <code>~/.gitconfig</code> global configuration file:</p>
+
+<pre><code>#[diff]
+#   tool = adifftool
+#   external = git-difftool--helper
+</code></pre>
+
+<p>or</p>
+
+<pre><code>[difftool "adifftool"]
+    cmd = araxis-difftool.sh \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
+[difftool]
+    prompt = false
+
+#Automatically do all merges with this mergetool
+[merge]
+    tool = amergetool
+[mergetool "amergetool"]
+    cmd = araxis-mergetool.sh \"$PWD/$LOCAL\" \"$PWD/$BASE\" \"$PWD/$REMOTE\" \"$PWD/$MERGED\"
+[mergetool]
+    prompt = false
+</code></pre>
+
+<p>Using Araxis for diffing</p>
+
+<pre><code>git difftool HEAD HEAD^ -- test2.txt
+</code></pre>

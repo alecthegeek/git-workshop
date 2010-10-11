@@ -1,0 +1,26 @@
+<h1>Continuous Integration</h1>
+
+<h2>Bamboo</h2>
+
+<p>Git support is available as a [plugin for Bamboo](http://www.atlassian.com/software/bamboo/tour/bamboo-plugin.jsp]</p>
+
+<p><a href="https://plugins.atlassian.com/plugin/details/9510">The Git plugin</a> was authored by Kristian Rosenvold of Zenior AS in Norway and Don Brown of Atlassian.</p>
+
+<p>For post-build pushes of repos up-stream, the <a href="https://plugins.atlassian.com/plugin/details/5581">Pre/Post Build Command Plugin</a> will assist in calling git (must be on the Bamboo server's path):</p>
+
+<pre><code>git push FULLREPOURL BRANCHNAMETOPUSH:BRANCHNAMEONREMOTESIDE
+</code></pre>
+
+<p>With an actual URL</p>
+
+<pre><code>git push git://git.apache.org/commons-logging.git master-trial:master
+</code></pre>
+
+<p>Can walk through setting up a Git based project (from Apache Git sources)</p>
+
+<pre><code>[Bamboo on http://localhost:8085/](http://localhost:8085/)
+</code></pre>
+
+<h2>Hudson</h2>
+
+<p><a href="http://hudson-ci.org/">Hudson</a> is an open source CI server. It has excellent Git integration via the <a href="http://wiki.hudson-ci.org/display/HUDSON/Git+Plugin">Git plugin</a>.</p>

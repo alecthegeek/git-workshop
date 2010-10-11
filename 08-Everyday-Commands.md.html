@@ -1,0 +1,109 @@
+<h1>Everyday Commands</h1>
+
+<h2>Status</h2>
+
+<p>Shows the current status of tracked objects in a repo while sitting anywhere in that repo's directory tree).</p>
+
+<pre><code>git status
+</code></pre>
+
+<p>Everything unstaged diffed to the last commit</p>
+
+<pre><code>git diff
+</code></pre>
+
+<p>Everything staged diffed to the last commit</p>
+
+<pre><code>git diff --cached
+</code></pre>
+
+<p>Everything unstaged and staged diffed to the last commit</p>
+
+<pre><code>git diff HEAD
+</code></pre>
+
+<h2>Adding</h2>
+
+<pre><code>git add &lt;WILDCARD&gt;
+git add &lt;SPECIFICFILENAME&gt;
+</code></pre>
+
+<p>Interactive</p>
+
+<pre><code>git add -i
+</code></pre>
+
+<p>Interactive patch mode</p>
+
+<pre><code>git add -p
+</code></pre>
+
+<h2>Removing</h2>
+
+<p>Remove a file from being tracked</p>
+
+<pre><code>git rm FILENAME
+</code></pre>
+
+<h2>Renaming (Moving)</h2>
+
+<p>Rename a tracked file</p>
+
+<pre><code>git mv FILENAME NEWFILENAME
+</code></pre>
+
+<h2>Committing</h2>
+
+<p>Commit changes with a message provided interactively ($GIT_EDITOR or $EDITOR)</p>
+
+<pre><code>git commit
+</code></pre>
+
+<p>Or preview what would have occurred</p>
+
+<pre><code>git commit --dry-run
+</code></pre>
+
+<p>Commit with a message provided on the CLI</p>
+
+<pre><code>git commit -m'Some message'
+</code></pre>
+
+<p>Commit and add any modified tracked files in one unified command</p>
+
+<pre><code>git commit -a
+</code></pre>
+
+<h2>Git Ignores</h2>
+
+<p>Stored in a file at any level of the tree.</p>
+
+<pre><code>.gitignore
+</code></pre>
+
+<p>Can apply recursively.</p>
+
+<pre><code>**/*.tmp
+</code></pre>
+
+<p>Glob pattern format</p>
+
+<pre><code>**/log*/*.log
+</code></pre>
+
+<p>Exclusions</p>
+
+<pre><code>!logstuffweneedtokeep
+</code></pre>
+
+<h2>Checkout to a different Branch</h2>
+
+<p>Switch to a given branch</p>
+
+<pre><code>git checkout BRANCHNAME
+</code></pre>
+
+<p>Switch to a detached (arbitrary, detached) HEAD</p>
+
+<pre><code>git checkout TREEISH
+</code></pre>

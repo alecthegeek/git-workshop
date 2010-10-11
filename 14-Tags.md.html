@@ -1,0 +1,40 @@
+<h1>Managing Checkpoints</h1>
+
+<h2>Tagging</h2>
+
+<p>List all existing tags</p>
+
+<pre><code>git tag
+</code></pre>
+
+<p>Mark a lightweight tag at the current point in history on the current branch</p>
+
+<pre><code>git tag TAGNAME
+</code></pre>
+
+<p>Mark a lightweight tag at some previous point in history</p>
+
+<pre><code>git tag TAGNAME TREEISH
+</code></pre>
+
+<p>Push tags to a remote repo</p>
+
+<pre><code>git push --tags
+</code></pre>
+
+<p>Overwrite an existing lightweight tag (locally)</p>
+
+<pre><code>git tag TAGNAME -f
+</code></pre>
+
+<p>Create a tag object without a digital signature</p>
+
+<pre><code>git tag TAGNAME -a
+</code></pre>
+
+<p>Find tags containing a commit (do these tags have this fix?)</p>
+
+<pre><code>git tag --contains TREEISH
+</code></pre>
+
+<p>Note that <code>.git/refs/tags</code> are the non-object tags.</p>

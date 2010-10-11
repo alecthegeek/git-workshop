@@ -1,0 +1,27 @@
+<h1>Maintenance</h1>
+
+<h2>File System Check</h2>
+
+<p>File system check verifies integrity. Finds corrupt objects.</p>
+
+<pre><code>git fsck
+</code></pre>
+
+<h2>Prune</h2>
+
+<p>Prune is a command that optimizes your repository by removing commits that are not orphaned.</p>
+
+<pre><code>git prune
+</code></pre>
+
+<p>or to see what is orphaned, but not actually touch them:</p>
+
+<pre><code>git prune --dry-run
+</code></pre>
+
+<h2>Garbage Collect</h2>
+
+<p>GC compacts old loose commits into pack files and <code>prune</code>s orphan commits. It is a superset of the <code>prune</code> command and is more commonly run than <code>prune</code>.</p>
+
+<pre><code>git gc
+</code></pre>

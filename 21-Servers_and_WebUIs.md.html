@@ -1,0 +1,95 @@
+<h1>Servers &amp; Web Interfaces</h1>
+
+<h2>Git Daemon</h2>
+
+<p>Run a local Git server on port 9418 (<code>DEFAULT_GIT_PORT</code>). The <code>--base-path</code> option sets up a virtual new root for cloning. Otherwise, the cloning end would need to know the actual path on your disk from the root to the repository folder. That is generally undesirable and the more common expectation is that repos are at the top level.</p>
+
+<pre><code>git daemon --export-all --base-path=. .
+</code></pre>
+
+<p>Then the client can clone this with:</p>
+
+<pre><code>git clone git://&lt;somehostoripaddr&gt;/myrepo
+</code></pre>
+
+<p>The <code>--export-all</code> option is necessary to force sharing of all repositories found, even if the marker file <code>git-daemon-export-ok</code> is not present in the specific repos you wish to share. If you do create the marker file, then the following will suffice:</p>
+
+<pre><code>git daemon --base-path=. .
+</code></pre>
+
+<h2>Gitosis</h2>
+
+<p>The next lightest weight Git repository hosting solution.</p>
+
+<ul>
+<li>Managed via cloning and pushing changes to a gitosis-admin repository.</li>
+<li>No UI</li>
+<li>Medium-grained control of access to repositories per user.</li>
+<li>Keys committed to subfolder of admin repo and are pushed into <code>authorized_keys</code> by a post-commit hook.</li>
+</ul>
+
+<h2>Gitolite</h2>
+
+<p>A medium-weight Git repository management solution.</p>
+
+<ul>
+<li>Finer grained control over permissions and access than Gitosis.</li>
+<li>Can lock glob patterns (branches, folders, repos) per repo</li>
+<li>Like Gitosis, has a folder of the admin repo for keys, which are automatically inserted in <code>authorized_keys</code> when pushed.</li>
+<li>Requires administrator to publish SSH keys for users (can't be published by the users)</li>
+<li>Offers "personal playground" repos per user.</li>
+<li>Offers feedback on permissions if ssh to the host is tried</li>
+</ul>
+
+<p>Sample output:</p>
+
+<pre><code>ssh gitolite@myserver
+
+PTY allocation request failed on channel 0
+hello mccm06, the gitolite version here is v1.5.5-68-g3cf2970
+the gitolite config gives you the following access:
+     R   W  gitolite-admin
+    @R  @W  testing
+    @R   W  testinglessaccess
+Connection to myserver closed.
+</code></pre>
+
+<h2>Gitorious</h2>
+
+<p>A "heavier" Ruby web interface and Git repository hosting solution.</p>
+
+<ul>
+<li>Medium grained access control.</li>
+<li>Public instance at Gitorious.com</li>
+<li>Users can self-publish their SSH key via the web interface.</li>
+</ul>
+
+<h2>Instaweb</h2>
+
+<p>User interface only. No hosting capabilities.</p>
+
+<p>To run a Git read-only http interface while sitting at a prompt inside a git repository:</p>
+
+<pre><code>git instaweb
+</code></pre>
+
+<p>Then open a browser to <a href="http://127.0.0.1:1234/">http://127.0.0.1:1234/</a>.</p>
+
+<p>On Linux, just <code>apt-get</code> the <code>lighttpd</code> package.</p>
+
+<p>On Mac, use MacPorts or HomeBrew to install package <code>lighttpd</code></p>
+
+<p>On Windows, this is a <a href="http://asimilatorul.com/index.php/2009/10/12/git-instaweb-using-mongoose-and-msysgit/">bit more challenging</a> to set up.</p>
+
+<h2>Fisheye</h2>
+
+<p><a href="http://www.clearvision-cm.com/clearvision-news/atlassian-fisheye-2.2-adds-support-for-git-and-ibm-rational-clearcase.html">Atlassian Fisheye 2.2 has support for Git and Clearcase</a></p>
+
+<h2>ViewVC</h2>
+
+<p>Not supporting Git yet. <a href="http://viewvc.tigris.org/ds/viewMessage.do?dsForumId=4255&amp;dsMessageId=2413932">Discussion</a> does not seem to indicate plans to support Git.</p>
+
+<h2>Gerrit</h2>
+
+<p>Tool for code reviews.
+Invented at Google.</p>

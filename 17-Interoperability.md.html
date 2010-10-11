@@ -1,0 +1,129 @@
+<h1>Interoperability</h1>
+
+<h2>SVN</h2>
+
+<p>Clone one part (branch, folder, tree) of a Subversion repository
+    git svn clone URL</p>
+
+<p>Clone an entire SVN repo with tags, trunks, and branches
+    git svn clone --stdlayout URL
+    git svn clone --stdlayout http://svn.apache.org/repos/asf/commons/proper/logging/
+    git svn clone --stdlayout http://ambientideas.unfuddle.com/svn/ambientideas_sample11-svnscm/</p>
+
+<p>or just the trunk
+    git svn clone http://ambientideas.unfuddle.com/svn/ambientideas_sample11-svnscm/trunk</p>
+
+<p>Get new commits from Subversion
+    git svn rebase</p>
+
+<p>Push Git commits back to Subversion
+    git svn dcommit</p>
+
+<h2>ClearCase</h2>
+
+<ul>
+<li>Conversion Tools
+<ul>
+<li><a href="http://www.clearvision-cm.com/version-control-connectors/cmbridge/ash_flypage.tpl.html">CMBridge</a></li>
+<li>Commercial tool</li>
+<li>Round-trip conversion</li>
+<li>SVN and Git support</li>
+<li>A workflow that uses <a href="http://genaud.net/2008/08/clearcase-globally-git-locally/">ClearCase for checkouts and Git for desktop version control</a></li>
+<li>Merely a manual way of working with the two systems</li>
+<li>Puts strain on the developer to maintain state in Git and push back to CC as needed</li>
+<li>Can require locking</li>
+<li><a href="http://www.turbodad.com/articles/24/12-revision">Another workflow</a> that slightly improves on the previous one</li>
+<li>Still no real automation</li>
+<li>Burdens the developer</li>
+<li>But doesn't require the approval, purchase or download of any bridging tools</li>
+<li><a href="http://github.com/charleso/git-cc">git-cc scripts</a></li>
+<li>Provides <code>gitcc</code> script.</li>
+<li>Offers convenience "bridge" functions to put changes back into CC, treating it as the source-of-record.</li>
+<li>Similar to the git-svn bridge that is part of the official Git distribution</li>
+<li><a href="http://gitorious.org/git-clearcase">git-clearcase bridge</a></li>
+<li><a href="http://gitorious.org/git-clearcase/git-clearcase/blobs/master/README">Readme</a></li>
+<li>Perl based</li>
+<li>Only works with one view</li>
+<li>No history import</li>
+<li><code>gitclearcase initcc</code> to start</li>
+<li><code>gitclearcase pullcc</code> to push changes back in (checkout, merge, checkin to CC)</li>
+<li>If conflicts, resolve, then <code>gitclearcase commitcc</code>    </li>
+<li>Native Git conversion</li>
+<li>Write your own scripts</li>
+<li>git fast-import</li>
+</ul></li>
+</ul>
+
+<h2>Fast-Import</h2>
+
+<p>Git <code>fast-import</code> is a human-readable transport format for recreating repositories. Ben Lynn has written a quick description of <a href="http://crypto.stanford.edu/~blynn/gitmagic/ch05.html">fast-import</a> that is helpful to read.</p>
+
+<p>The standard use of fast-import is a one time import of source code history from another version control system. Using sed, awk, grep and similar tools, developers can craft an output to almost any version control system that matches this fast-import file format.</p>
+
+<p>Example export:</p>
+
+<pre><code>blob
+mark :1
+data 13
+Testing
+JUNK
+
+blob
+mark :2
+data 14
+Testing2
+JUNK
+
+commit refs/heads/master
+mark :3
+author Matthew McCullough &lt;matthewm@ambientideas.com&gt; 1286663588 -0600
+committer Matthew McCullough &lt;matthewm@ambientideas.com&gt; 1286663588 -0600
+data 11
+More stuff
+M 100644 :1 test1.txt
+M 100644 :2 test2.txt
+
+blob
+mark :4
+data 22
+Testing
+JUNK
+MOREJUNK
+
+blob
+mark :5
+data 23
+Testing2
+JUNK
+MOREJUNK
+
+commit refs/heads/master
+mark :6
+author Matthew McCullough &lt;matthewm@ambientideas.com&gt; 1286664669 -0600
+committer Matthew McCullough &lt;matthewm@ambientideas.com&gt; 1286664669 -0600
+data 15
+Another commit
+from :3
+M 100644 :4 test1.txt
+M 100644 :5 test2.txt
+</code></pre>
+
+<p>Create a Git repository from this formatted input file:</p>
+
+<pre><code>mkdir importedproject
+cd importedproject
+git init
+git fast-import --date-format=rfc2822 &lt; /myimportfile
+</code></pre>
+
+<p>and then switch to the master branch after the import with:</p>
+
+<pre><code>git checkout master .
+</code></pre>
+
+<p>There is an equivalent <code>git fast-export</code> command that outputs an already-Git repository to this plaintext format. It can be used to study the format and learn how to craft your own import files.</p>
+
+<pre><code>git fast-export HEAD^^..HEAD
+</code></pre>
+
+<p>You'll likely want to redirect this output to a file.</p>

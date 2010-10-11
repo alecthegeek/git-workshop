@@ -1,0 +1,37 @@
+<h1>Transporting Changes</h1>
+
+<h2>Bundles</h2>
+
+<p>Bundles are binary compressed archives that contain a series of commits. This format can be easily transmitted via email or USB stick.</p>
+
+<p>Create a bundle from a range of commit treeish</p>
+
+<pre><code>git bundle create catchupsusan.bundle HEAD~8..HEAD
+</code></pre>
+
+<p>Create a bundle from a range of time</p>
+
+<pre><code>git bundle create catchupsusan.bundle --since=10.days master
+</code></pre>
+
+<p>Show contents of a bundle</p>
+
+<pre><code>git ls-remote catchupsusan.bundle
+</code></pre>
+
+<p>Pull in the blobs from a bundle as if they were a remote, but don't merge them</p>
+
+<pre><code>git fetch catchupsusan.bundle
+</code></pre>
+
+<h2>Patching</h2>
+
+<p>Build an email that contains the patch</p>
+
+<pre><code>git email-patch
+</code></pre>
+
+<p>Apply a patchfile</p>
+
+<pre><code>git apply &lt;patchfile&gt;
+</code></pre>

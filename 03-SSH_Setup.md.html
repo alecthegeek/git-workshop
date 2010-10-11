@@ -1,0 +1,48 @@
+<h1>SSH Setup</h1>
+
+<h2>Setting up an SSH Key</h2>
+
+<p>This next step works with msysGit (Git for Windows) or on any *NIX system.</p>
+
+<pre><code>ssh-keygen -t rsa -C "yourname@yourcompany.com"
+</code></pre>
+
+<p>The <code>-t</code> flag is the algorithms used to create the key. The <code>-C</code> flag is the comment attached to the key. The comment can serve as a reminder of which system you use this with if you are going to generate more than one key pair to partition your Git SSH key from other SSH-authenticated systems and servers.</p>
+
+<p>Other algorithms, like DSA, can also be used for SSH authentication and are compatible with Git, since Git is merely using the operating system's underlying SSH capabilities.</p>
+
+<pre><code>ssh-keygen -t dsa -C "yourname@yourcompany.com"
+</code></pre>
+
+<p>Lengthier instructions for SSH key generation can be found at the <a href="http://help.github.com/msysgit-key-setup/">excellent GitHub page</a>.</p>
+
+<p>The decision whether or not to use a passphrase for your SSH keys can <a href="http://help.github.com/working-with-key-passphrases/">also be found on GitHub</a>.</p>
+
+<h2>Sharing the Public portion of the Key</h2>
+
+<p>Most Git services use half of the key we just generated for authenticating instead of the typical username and password.  In security terms, SSH keys are quite a bit stronger than usernames.</p>
+
+<p>Keep the private half of the key (<code>id_rsa</code>) protected. Give away the public half (<code>id_rsa.pub</code>) liberally. You could even store it in a directory service if desired.</p>
+
+<h2>Authorizing the key on another server</h2>
+
+<p>If you are in control of a server on which you'll be storing Git repos, you can authorize your account to automatically sign in. While logged in to the remote server, put the contents of a user's <code>id_rsa.pub</code> file on a single line (<em>absolutely no linebreaks!</em>) on a file named <code>~/.ssh/authorized_keys</code>.</p>
+
+<p>Similarly, key strings are copied-and-pasted to web based repositories like GitHub via the user interface. Copy the contents of <code>id_rsa.pub</code> to the clipboard and paste it into the appropriate textbox in the web UI of GitHub.</p>
+
+<h2>Testing SSH</h2>
+
+<p>If you wish to test if you have passwordless (key authentication) working correctly, just SSH to the server. It will use your <code>id_rsa</code> and <code>id_rsa.pub</code> files automatically if they live in <code>~/.ssh/</code>. You should not see any prompt for a password.</p>
+
+<pre><code>ssh SERVERNAME
+</code></pre>
+
+<p>In the case of a gitolite server, it will report your repository permissions before terminating.</p>
+
+<pre><code>hello mccm06, the gitolite version here is v1.5.5-68-g3cf2970
+the gitolite config gives you the following access:
+     R   W  gitolite-admin
+    @R  @W  testing
+    @R   W  testinglessaccess
+Connection to mybigserver closed.
+</code></pre>
