@@ -7,6 +7,11 @@
 <pre><code>git daemon --export-all --base-path=. .
 </code></pre>
 
+<p>or to enable pushing as well:</p>
+
+<pre><code>git daemon  --enable=receive-pack  \--export-all --base-path=. .
+</code></pre>
+
 <p>Then the client can clone this with:</p>
 
 <pre><code>git clone git://&lt;somehostoripaddr&gt;/myrepo
@@ -91,5 +96,11 @@ Connection to myserver closed.
 
 <h2>Gerrit</h2>
 
-<p>Tool for code reviews.
-Invented at Google.</p>
+<p><a href="http://code.google.com/p/gerrit/">Tool for code reviews</a>.
+* Invented at Google.
+* Used for <a href="https://review.source.android.com/">Android</a>.
+* Side by side code view.</p>
+
+<h2>CGit</h2>
+
+<p><a href="http://hjemli.net/git/cgit/">CGit is a simple web frontend</a> for Git repos.</p>

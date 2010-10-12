@@ -5,6 +5,10 @@ Run a local Git server on port 9418 (`DEFAULT_GIT_PORT`). The `--base-path` opti
 
     git daemon --export-all --base-path=. .
     
+or to enable pushing as well:
+
+    git daemon  --enable=receive-pack  \--export-all --base-path=. .
+    
 Then the client can clone this with:
 
     git clone git://<somehostoripaddr>/myrepo
@@ -72,5 +76,10 @@ On Windows, this is a [bit more challenging](http://asimilatorul.com/index.php/2
 Not supporting Git yet. [Discussion](http://viewvc.tigris.org/ds/viewMessage.do?dsForumId=4255&dsMessageId=2413932) does not seem to indicate plans to support Git.
 
 ## Gerrit
-Tool for code reviews.
-Invented at Google.
+[Tool for code reviews](http://code.google.com/p/gerrit/).
+* Invented at Google.
+* Used for [Android](https://review.source.android.com/).
+* Side by side code view.
+
+## CGit
+[CGit is a simple web frontend](http://hjemli.net/git/cgit/) for Git repos.
