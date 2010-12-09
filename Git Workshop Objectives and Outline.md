@@ -13,12 +13,15 @@ https://github.com/matthewmccullough/git-workshop
   - Using Matthew's repo
   - Add students to repo
   - Box name: Zeus
-- .git Internals
+- Internals
+  - The .git folder
+  - hashes
+  - HEAD
+  - refs
 - Every day commands, tools
   - status
   - log
   - diff
-  - checkout
   - rm
   - mv
   - .gitignore
@@ -33,6 +36,7 @@ https://github.com/matthewmccullough/git-workshop
   - reflog
 - Agility
   - branch
+  - checkout
   - checkout -b
   - push
   - pull
