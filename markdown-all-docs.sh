@@ -5,7 +5,7 @@ pushd workbook
 echo Cleaning up old PDFs
 rm pdfs/*.pdf
 echo Cleaning up old HTMLs
-rm htmls/*.md.html
+rm htmls/*.html
 
 pushd markdown
 echo Markdown to PDF conversion...
