@@ -1,0 +1,111 @@
+<h1>Filter-Branch</h1>
+
+<h2>Pruning out folders from a repo</h2>
+
+<p><code>filter-branch</code> is commonly used on a clone of the repo to split a too-large repo into smaller ones.</p>
+
+<h2><code>filter-branch</code> Reference Page</h2>
+
+<p><a href="http://www.kernel.org/pub/software/scm/git/docs/git-filter-branch.html">Filter Branch Command Documentation</a></p>
+
+<h2>Process</h2>
+
+<p>We'll start with <code>bigrepo</code> and create a new repo that contains only <code>c</code>. If we wanted to split into multiple repos, we would simply clone for each desired final repo and run a <code>filter-branch</code> on each.</p>
+
+<h2>Preparation</h2>
+
+<p>This is a destructive command and thus we need to clone the repository before we start operating on it. We will effectively be creating a new repository and leaving the old repository behind.</p>
+
+<p>Since git can optimize local-disk clones of repositories with hardlinks, we want to create a clone that is entirely separate from the original one:</p>
+
+<pre><code>git clone --no-hardlinks /path/to/originalrepo newrepo
+</code></pre>
+
+<h2>Pruning</h2>
+
+<h3>With a Subdirectory</h3>
+
+<p>If we wish to only save the files in the <code>c</code> directory while purging all branches, we can run the following command. Oddly lightweight tags are kept here. This <em>relocates</em> all files in the <code>c</code> subfolder to the <em>root</em> of the new repository. This is usually not what we want. Users typically want to specify what to prune away, leaving all other folder structures intact.</p>
+
+<pre><code>git filter-branch --subdirectory-filter c HEAD
+</code></pre>
+
+<p>The same command can have an additional option to keep all the branches.</p>
+
+<ul>
+<li>the <code>--</code> separates filter-branch options from revision options</li>
+<li><p>the <code>--all</code> rewrites all branches and tags</p>
+
+<p>git filter-branch --subdirectory-filter c HEAD -- --all</p></li>
+</ul>
+
+<h3>With the Tree and Checkouts</h3>
+
+<p>Alternatively, we can use a tree filter which <em>prunes away</em> the selected folder or filename pattern using shell commands. It checks out each commit and runs the command against it. This allows for the full power of any shell command to be leveraged, including greps.</p>
+
+<ul>
+<li><code>-f</code> force the <code>rm</code> or else commits where that file didn't exist would fail on the shell command.</li>
+<li><p><code>--prune-empty</code> removes any commits that have no files (blank, empty) after the shell command performs its surgery.</p>
+
+<p>git filter-branch --tree-filter "rm -rf c" --prune-empty HEAD</p></li>
+</ul>
+
+<h3>With the Index</h3>
+
+<p>A variation on this is the <code>--index-filter</code> which is much faster. It only operates on the DAG, not on checkouts and the staging area. It only uses git commands, not full shell commands.</p>
+
+<ul>
+<li><code>--cached</code> is supplied to leave untracked files alone. Only operate on tracked files.</li>
+<li><p><code>--ignore-unmatch</code> is supplied to allow the command to always succeed for every commit, even if the file didn't exist.</p>
+
+<p>git filter-branch --index-filter "git rm -r -f --cached --ignore-unmatch c" --prune-empty HEAD</p></li>
+</ul>
+
+<p>And this variation that adds the <code>--tag-name-filter</code> and <code>-- --all</code> which keeps the <code>.git/refs/heads/original/refs/tags</code> folder, keeps all references to the original tags in the <code>/git/info/refs</code> file, and re-writes the tag to <code>.git/refs/tags/AGOODPOINT</code> and <code>.git/refs/heads/addingonefile</code> branch.</p>
+
+<ul>
+<li><p><code>--tag-name-filter cat</code> re-writes all tags</p>
+
+<p>git filter-branch --index-filter "git rm -r -f --cached --ignore-unmatch c" --prune-empty --tag-name-filter cat -- --all</p></li>
+</ul>
+
+<h2>Cleanup</h2>
+
+<h3>Remove any <code>original</code> refs</h3>
+
+<p>Many of the <code>filter-branch</code> invocations will create a <code>.git/refs/original</code> folder to allow for a restore after a <code>filter-branch</code> execution. These are still first class references and will cause the objects to be retained. If you have reviewed the results of the filter and are satisfied with the result, remove these refs so that the objects can be cleaned up in the next steps.</p>
+
+<pre><code>git for-each-ref --format="%(refname)" refs/original/ | xargs -n 1 git update-ref -d
+</code></pre>
+
+<h3>Expire all entries from the reflog</h3>
+
+<p>Keep in mind that filter-branch only removes references from the DAG (history), but doesn't purge the <code>.git/objects</code> directory. Git always partitions repository cleanup into a separate step that is usually run on a scheduled basis.</p>
+
+<p>Expire all the old <code>reflog</code> entries now instead of at the scheduled time:</p>
+
+<pre><code>git reflog expire --expire=now --all
+</code></pre>
+
+<h3>Reset Working Directory</h3>
+
+<p>Reset to the "new" (possibly different) <code>HEAD</code> state now that entries have been removed with <code>filter-branch</code>.</p>
+
+<pre><code>git reset --hard
+</code></pre>
+
+<h3>Garbage Collection</h3>
+
+<p>Garbage collect any orphaned entries. From the git-gc man page, please note that:</p>
+
+<blockquote>
+  <p><code>git gc</code> tries very hard to be safe about the garbage it collects. In particular, it will keep not only objects referenced by your current set of branches and tags, but also objects referenced by the index, remote-tracking branches, refs saved by git <code>filter-branch</code> in <code>refs/original/</code>, or reflogs (which may reference commits in branches that were later amended or rewound).</p>
+  
+  <p>If you are expecting some objects to be collected and they aren’t, check all of those locations and decide whether it makes sense in your case to remove those references.</p>
+</blockquote>
+
+<ul>
+<li><p><code>--prune=now</code> Prune all unreachable (orphaned) objects from the DAG without a separate invocation of prune</p>
+
+<p>git gc --aggressive --prune=now</p></li>
+</ul>
