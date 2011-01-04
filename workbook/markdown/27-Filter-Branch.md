@@ -33,8 +33,9 @@ The same command can have an additional option to keep all the branches.
 
 * the `--` separates filter-branch options from revision options
 * the `--all` rewrites all branches and tags
+* the `--prune-empty` removes commits that would no longer have any content
 
-    git filter-branch --subdirectory-filter c HEAD -- --all
+    git filter-branch --prune-empty --subdirectory-filter c HEAD -- --all
 
 
 ### With the Tree and Checkouts

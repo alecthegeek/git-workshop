@@ -34,9 +34,10 @@
 
 <ul>
 <li>the <code>--</code> separates filter-branch options from revision options</li>
-<li><p>the <code>--all</code> rewrites all branches and tags</p>
+<li>the <code>--all</code> rewrites all branches and tags</li>
+<li><p>the <code>--prune-empty</code> removes commits that would no longer have any content</p>
 
-<p>git filter-branch --subdirectory-filter c HEAD -- --all</p></li>
+<p>git filter-branch --prune-empty --subdirectory-filter c HEAD -- --all</p></li>
 </ul>
 
 <h3>With the Tree and Checkouts</h3>
