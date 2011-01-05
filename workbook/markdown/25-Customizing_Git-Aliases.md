@@ -34,6 +34,6 @@ Aliases only allow for Git commands by default, but you can coax it to run shell
 
     dm = !git diff | mate
     dv = !git diff | vim
-    publish = !git checkout master && git pull && git checkout dev && git rebase master && git checkout master && git
+    publish = !git checkout master && git pull && git checkout dev && git rebase master && git checkout master && git lgod
 
 The `publish` command comes from the [ideas of Justin French](http://justinfrench.com/notebook/git-aliases-rock).
